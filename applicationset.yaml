@@ -17,7 +17,7 @@ spec:
                 environment: '{{ index .metadata.labels "environment"}}'
           - git:
               repoURL: 'https://github.com/aali309/argocd-test-nested.git'
-              revision: main
+              revision: HEAD
               files:
                 - path: 'apps/*/argo-config.json'
   template:
@@ -28,7 +28,7 @@ spec:
       sources:
         # by default all values are within the values directory
         - repoURL: 'https://github.com/aali309/argocd-test-nested.git'
-          targetRevision: main
+          targetRevision: HEAD
           ref: helmValues
         # template the helm charts using the given values
         - repoURL: '{{ .helmRepo }}'
