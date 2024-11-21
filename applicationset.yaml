@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-nested-values
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - matrix:
+        generators:
+          - clusters:
+              selector:
+                matchLabels:
+                  enabled: "true"
+              values:
+                environment: '{{ index .metadata.labels "environment"}}'
+          - git:
+              repoURL: 'https://github.com/YOUR_USERNAME/test-nested.git'
+              revision: HEAD
+              files:
+                - path: 'apps/*/argo-config.json'
+  template:
+    metadata:
+      name: "{{.app}}-{{.values.environment}}"
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .helmRepo }}'
+        chart: '{{ .helmChart }}'
+        targetRevision: '{{ dig "overrides" .values.environment "helmChartVersion" .helmChartVersion . }}'
+      destination:
+        server: '{{.server}}'
+        namespace: test-namespace
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
