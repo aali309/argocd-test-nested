@@ -1,1 +1,3 @@
 dev: config
+replicaCount: 2
+message: "This is dev environment"

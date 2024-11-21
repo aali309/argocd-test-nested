@@ -1,1 +1,2 @@
-global: value
+global:
+  environment: "default"

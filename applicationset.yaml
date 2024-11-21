@@ -13,6 +13,7 @@ spec:
                 matchLabels:
                   enabled: "true"
               values:
+                cluster: '{{ index .metadata.labels "app.kubernetes.io/name" }}'
                 environment: '{{ index .metadata.labels "environment"}}'
           - git:
               repoURL: 'https://github.com/aali309/argocd-test-nested.git'
@@ -21,13 +22,24 @@ spec:
                 - path: 'apps/*/argo-config.json'
   template:
     metadata:
-      name: "{{.app}}-{{.values.environment}}"
+      name: "{{.nameNormalized}}-{{.app}}"
     spec:
-      project: default
-      source:
-        repoURL: '{{ .helmRepo }}'
-        chart: '{{ .helmChart }}'
-        targetRevision: '{{ dig "overrides" .values.environment "helmChartVersion" .helmChartVersion . }}'
+      project: default 
+      sources:
+        # by default all values are within the values directory
+        - repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+          targetRevision: main
+          ref: helmValues
+        # template the helm charts using the given values
+        - repoURL: '{{ .helmRepo }}'
+          chart: '{{ .helmChart }}'
+          targetRevision: '{{ dig "overrides" .values.environment "helmChartVersion" .helmChartVersion . }}'
+          helm:
+            valueFiles:
+              - '$helmValues/apps/{{.app}}/values/globals.yaml'
+              - '$helmValues/apps/{{.app}}/values/environments/{{.values.environment}}.yaml'
+              - '$helmValues/apps/{{.app}}/values/clusters/{{.values.cluster}}.yaml' 
+            ignoreMissingValueFiles: true
       destination:
         server: '{{.server}}'
         namespace: test-namespace

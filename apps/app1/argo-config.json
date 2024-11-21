@@ -1,7 +1,7 @@
 {
   "app": "app1",
-  "helmRepo": "https://charts.test.com",
-  "helmChart": "test-chart",
+  "helmRepo": "https://charts.bitnami.com/bitnami",
+  "helmChart": "nginx",
   "helmChartVersion": "1.2.0",
   "overrides": {
     "dev": {

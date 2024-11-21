@@ -1,1 +1,3 @@
 prod: config
+replicaCount: 4
+message: "This is prod environment"
