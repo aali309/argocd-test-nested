@@ -15,8 +15,8 @@ spec:
               values:
                 environment: '{{ index .metadata.labels "environment"}}'
           - git:
-              repoURL: 'https://github.com/YOUR_USERNAME/test-nested.git'
-              revision: HEAD
+              repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+              revision: main
               files:
                 - path: 'apps/*/argo-config.json'
   template:
