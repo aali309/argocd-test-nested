@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: foo-backend-support-services
+  namespace: bar
+  labels:
+    argocd.baz.tech/name: foo-backend-support-services
+  annotations:
+    argocd.paramount.tech/description: |-
+      ApplicationSet for 'foo-backend-support-services'.
+    k8s.baz.tech/technical-owner: 'foo@example.com'
+spec:
+  generators:
+  - list:
+      elements:
+      - id: foo-use1-dev
+        env: dev
+        region: use1
+        cluster: foo.dev.aws.viacbs.tech
+  template:
+    metadata:
+      name: '{{id}}'
+      namespace: bar
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: abcd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+      sources:
+      destination:
+        name: '{{cluster}}'
+        namespace: bar
