@@ -3,7 +3,8 @@ kind: StatefulSet
 metadata:
   name: postgresql
 spec:
-  serviceName: postgresql-svc-new    # Changed from postgresql-svc to postgresql-svc-new
+  serviceName: postgresql-svc
+  replicas: 1
   selector:
     matchLabels:
       app: postgresql
