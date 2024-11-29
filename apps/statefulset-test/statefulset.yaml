@@ -2,10 +2,9 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgresql
-  namespace: argocd-e2e # Specify the namespace if it's not default
 spec:
   serviceName: postgresql-svc-new
-  replicas: 4
+  replicas: 3
   selector:
     matchLabels:
       app: postgresql
@@ -17,26 +16,3 @@ spec:
       containers:
       - name: postgresql
         image: postgres:13
-        ports:
-        - containerPort: 5432
-          name: postgres
-        env:
-        # Define environment variables for PostgreSQL
-        - name: POSTGRES_USER
-          value: admin # Replace with your desired username
-        - name: POSTGRES_PASSWORD
-          value: admin123 # Replace with a secure password
-        - name: POSTGRES_DB
-          value: mydb # Replace with the name of your initial database
-        volumeMounts:
-        - name: postgresql-data
-          mountPath: /var/lib/postgresql/data
-  volumeClaimTemplates:
-  - metadata:
-      name: postgresql-data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 1Gi # Adjust the storage size as needed
-  podManagementPolicy: OrderedReady # Ensure pods start in order
