@@ -19,24 +19,26 @@ spec:
           repoURL: 'https://github.com/aali309/argocd-test-nested.git'
           revision: HEAD
           files:
-          - path: 'apps/*/*.yaml' # Adjusted to include any YAML file
+          - path: 'apps/*/argo-config.json'
   template:
     metadata:
       name: "{{.nameNormalized}}-{{.app}}"
     spec:
       project: default
       sources:
+      # by default all values are within the values directory
       - repoURL: 'https://github.com/aali309/argocd-test-nested.git'
         targetRevision: HEAD
         ref: helmValues
+      # template the helm charts using the given values
       - repoURL: '{{ .helmRepo }}'
         chart: '{{ .helmChart }}'
         targetRevision: '{{ dig "overrides" .values.environment "helmChartVersion" .helmChartVersion . }}'
         helm:
           valueFiles:
-          - 'apps/{{.app}}/values/globals.yaml'
-          - 'apps/{{.app}}/values/environments/{{.values.environment}}.yaml'
-          - 'apps/{{.app}}/values/clusters/{{.values.cluster}}.yaml'
+          - '$helmValues/apps/{{.app}}/values/globals.yaml'
+          - '$helmValues/apps/{{.app}}/values/environments/{{.values.environment}}.yaml'
+          - '$helmValues/apps/{{.app}}/values/clusters/{{.values.cluster}}.yaml'
           ignoreMissingValueFiles: true
       destination:
         server: '{{.server}}'
