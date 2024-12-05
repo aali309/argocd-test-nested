@@ -29,10 +29,10 @@ spec:
         automated:
           prune: true
           selfHeal: true
-      sources:
-      - repoURL: 'https://github.com/viacbs/foo-backend-support-services.git'
+      source:
+        repoURL: 'https://github.com/viacbs/foo-backend-support-services.git'
         targetRevision: HEAD
         path: '{{region}}/{{env}}'
       destination:
-        name: '{{cluster}}'
+        server: '{{cluster}}'
         namespace: bar
