@@ -22,7 +22,7 @@ spec:
       name: '{{id}}'
       namespace: bar
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+      - resources-finalizer.argocd.argoproj.io
     spec:
       project: abcd
       syncPolicy:
@@ -30,6 +30,9 @@ spec:
           prune: true
           selfHeal: true
       sources:
+      - repoURL: 'https://github.com/viacbs/foo-backend-support-services.git'
+        targetRevision: HEAD
+        path: '{{region}}/{{env}}'
       destination:
         name: '{{cluster}}'
         namespace: bar
