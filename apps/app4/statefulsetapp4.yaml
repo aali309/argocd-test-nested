@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: my-app
-  serviceName: "my-service"
+  serviceName: "my-service-new"
   replicas: 1
   template:
     metadata:
@@ -21,9 +21,9 @@ spec:
         - containerPort: 80
   volumeClaimTemplates:
   - metadata:
-      name: data
+      name: data-new
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "ReadWriteOnce-new" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
