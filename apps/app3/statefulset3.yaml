@@ -72,7 +72,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
   - metadata:
       name: argocd-dex-server-tls
     spec:
