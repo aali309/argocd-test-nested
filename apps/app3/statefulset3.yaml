@@ -11,10 +11,10 @@ spec:
   template:
     metadata:
       labels:
-        app: postgresql
+        app: postgresql-new
     spec:
       containers:
-      - name: postgresql-new
+      - name: postgresql
         image: postgres:13
         ports:
         - containerPort: 5432
