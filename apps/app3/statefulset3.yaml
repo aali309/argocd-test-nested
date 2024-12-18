@@ -7,7 +7,7 @@ spec:
   replicas: 6
   selector:
     matchLabels:
-      app: postgresql-new
+      app: postgresql
   template:
     metadata:
       labels:
