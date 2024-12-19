@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgresql-app5
+  name: postgresql-app5-new
 spec:
-  serviceName: postgresql-svc
+  serviceName: postgresql-svc-new
   replicas: 1
   selector:
     matchLabels:
@@ -38,7 +38,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
         limits:
           storage: 1Gi
   - metadata:
@@ -47,7 +47,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
         limits:
           storage: 1Gi
   - metadata:
@@ -56,6 +56,6 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 3Gi
         limits:
           storage: 1Gi
