@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgresql-app5-new
+  name: postgresql-app5
 spec:
   serviceName: postgresql-svc-new
   replicas: 1
@@ -40,7 +40,7 @@ spec:
         requests:
           storage: 2Gi
         limits:
-          storage: 1Gi
+          storage: 2Gi
   - metadata:
       name: dexconfig
     spec:
@@ -49,7 +49,7 @@ spec:
         requests:
           storage: 2Gi
         limits:
-          storage: 1Gi
+          storage: 2Gi
   - metadata:
       name: argocd-dex-server-tls
     spec:
@@ -58,4 +58,4 @@ spec:
         requests:
           storage: 3Gi
         limits:
-          storage: 1Gi
+          storage: 3Gi
