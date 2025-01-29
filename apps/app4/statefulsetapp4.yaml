@@ -8,7 +8,6 @@ spec:
     matchLabels:
       app: my-app
   serviceName: "my-service"
-  revisionHistoryLimit: 5
   replicas: 1
   template:
     metadata:
