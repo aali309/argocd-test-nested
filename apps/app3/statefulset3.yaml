@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: postgresql
 spec:
-  serviceName: postgresql-svc-new
+  serviceName: postgresql-svc
   replicas: 6
   selector:
     matchLabels:
@@ -65,18 +65,18 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
   - metadata:
       name: dexconfig
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
   - metadata:
       name: argocd-dex-server-tls
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
