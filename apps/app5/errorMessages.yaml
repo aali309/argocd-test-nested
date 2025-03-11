@@ -4,7 +4,7 @@ metadata:
   name: postgresql-app5
 spec:
   serviceName: postgresql-svc
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgresql
