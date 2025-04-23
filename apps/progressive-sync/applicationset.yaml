@@ -2,24 +2,22 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: progressive-sync-apps
+  namespace: argocd-e2e
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
   generators:
-  - matrix:
-      generators:
-      - list:
-          elements:
-          - app: app1
-            environment: dev
-          - app: app3
-            environment: staging
-          - app: app4
-            environment: prod
-      - clusters:
-          selector:
-            matchLabels:
-              enabled: "true"
+  - list:
+      elements:
+      - name: app1
+        environment: dev
+        url: https://kubernetes.default.svc
+      - name: app3
+        environment: staging
+        url: https://kubernetes.default.svc
+      - name: app4
+        environment: prod
+        url: https://kubernetes.default.svc
   strategy:
     type: RollingSync
     rollingSync:
@@ -41,7 +39,8 @@ spec:
           - prod
   template:
     metadata:
-      name: '{{.app}}-{{index .metadata.labels "app.kubernetes.io/name"}}'
+      name: '{{.name}}-{{.environment}}'
+      namespace: argocd-e2e
       labels:
         environment: '{{.environment}}'
     spec:
@@ -49,10 +48,10 @@ spec:
       source:
         repoURL: https://github.com/aali309/argocd-test-nested
         targetRevision: HEAD
-        path: apps/{{.app}}
+        path: apps/{{.name}}
       destination:
-        server: '{{.server}}'
-        namespace: '{{.app}}'
+        server: '{{.url}}'
+        namespace: '{{.name}}'
       syncPolicy:
         automated:
           prune: true

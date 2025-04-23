@@ -3,24 +3,13 @@
   "kind": "ConfigMap",
   "metadata": {
     "name": "app1-config",
-    "namespace": "test-namespace"
+    "namespace": "app1"
   },
   "data": {
     "app": "app1",
     "helmRepo": "https://charts.bitnami.com/bitnami",
     "helmChart": "nginx",
     "helmChartVersion": "1.2.0",
-    "overrides": {
-      "dev": {
-        "helmChartVersion": "1.4.0"
-      },
-      "test": {
-        "helmChartVersion": "1.3.0"
-      },
-      "prod": {},
-      "in-cluster": {
-        "helmChartVersion": "1.1.0"
-      }
-    }
+    "overrides": "{\"dev\":{\"helmChartVersion\":\"1.4.0\"},\"test\":{\"helmChartVersion\":\"1.3.0\"},\"prod\":{},\"in-cluster\":{\"helmChartVersion\":\"1.1.0\"}}"
   }
 }
