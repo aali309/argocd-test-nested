@@ -52,7 +52,3 @@ spec:
       destination:
         server: '{{.url}}'
         namespace: '{{.name}}'
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
