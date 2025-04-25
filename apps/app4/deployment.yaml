@@ -1,9 +1,8 @@
-# apps/app4/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-deployment
-  namespace: argocd-e2e
+  namespace: app4
 spec:
   revisionHistoryLimit: 3
   selector:

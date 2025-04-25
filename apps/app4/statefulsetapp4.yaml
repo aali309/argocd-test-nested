@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: my-statefulset
-  namespace: argocd-e2e
+  namespace: app4
 spec:
   selector:
     matchLabels:
