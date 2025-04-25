@@ -4,7 +4,7 @@ metadata:
   name: postgresql
 spec:
   serviceName: postgresql-svc
-  replicas: 6
+  replicas: 1
   selector:
     matchLabels:
       app: postgresql
@@ -22,61 +22,3 @@ spec:
         env:
         - name: POSTGRES_HOST_AUTH_METHOD
           value: trust
-      - name: dex
-        image: ghcr.io/dexidp/dex:v2.41.1
-        imagePullPolicy: Always
-        command:
-        - /shared/argocd-dex
-        - rundex
-        ports:
-        - containerPort: 5556
-          protocol: TCP
-        - containerPort: 5557
-          protocol: TCP
-        - containerPort: 5558
-          protocol: TCP
-        env:
-        - name: ARGOCD_DEX_SERVER_LOGFORMAT
-          valueFrom:
-            configMapKeyRef:
-              key: dexserver.log.format
-              name: argocd-cmd-params-cm
-              optional: true
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /shared
-          name: static-files
-        - mountPath: /tmp
-          name: dexconfig
-        - mountPath: /tls
-          name: argocd-dex-server-tls
-  volumeClaimTemplates:
-  - metadata:
-      name: static-files
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-  - metadata:
-      name: dexconfig
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-  - metadata:
-      name: argocd-dex-server-tls
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
