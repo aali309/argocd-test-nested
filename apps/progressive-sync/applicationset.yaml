@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: progressive-sync-apps
-  namespace: argocd-e2e
+  namespace: argocd-e2e-external
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
