@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: progressive-sync-apps
-  namespace: argocd-e2e
+  namespace: argocd
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
@@ -40,7 +40,7 @@ spec:
   template:
     metadata:
       name: '{{.name}}-{{.environment}}'
-      namespace: argocd-e2e
+      namespace: argocd
       labels:
         environment: '{{.environment}}'
     spec:
