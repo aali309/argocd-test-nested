@@ -1,0 +1,63 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-b-application-controller
+rules:
+- apiGroups: [ "argoproj.io" ]
+  resources: [ "appprojects", "applications", "applicationsets" ]
+  verbs: [ "*" ]
+- apiGroups: [ "" ]
+  resources: [ "services", "endpoints", "pods", "secrets", "configmaps", "events", "serviceaccounts", "persistentvolumes", "persistentvolumeclaims", "namespaces", "limitranges", "resourcequotas", "replicationcontrollers", "podtemplates", "nodes" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apps" ]
+  resources: [ "deployments", "statefulsets", "daemonsets", "replicasets", "controllerrevisions" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "storage.k8s.io" ]
+  resources: [ "storageclasses", "csidrivers", "csinodes", "volumeattachments", "csistoragecapacities" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "flowcontrol.apiserver.k8s.io" ]
+  resources: [ "flowschemas", "prioritylevelconfigurations" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "scheduling.k8s.io" ]
+  resources: [ "priorityclasses" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "batch" ]
+  resources: [ "cronjobs", "jobs" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apiregistration.k8s.io" ]
+  resources: [ "apiservices" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "apiextensions.k8s.io" ]
+  resources: [ "customresourcedefinitions" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "clusterroles", "clusterrolebindings", "roles", "rolebindings" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "admissionregistration.k8s.io" ]
+  resources: [ "validatingwebhookconfigurations", "mutatingwebhookconfigurations" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "networking.k8s.io" ]
+  resources: [ "ingresses", "ingressclasses", "networkpolicies" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "node.k8s.io" ]
+  resources: [ "runtimeclasses" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "autoscaling" ]
+  resources: [ "horizontalpodautoscalers" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "policy" ]
+  resources: [ "poddisruptionbudgets" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argocd-b-application-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argocd-b-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: argocd-b
