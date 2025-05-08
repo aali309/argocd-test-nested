@@ -1,38 +1,27 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: app1
+  name: simple-test
   namespace: argocd-b
-  labels:
-    argocd.baz.tech/name: foo-backend-support-services
-  annotations:
-    argocd.paramount.tech/description: |-
-      ApplicationSet for 'foo-backend-support-services'.
-    k8s.baz.tech/technical-owner: 'foo@example.com'
 spec:
   generators:
   - list:
       elements:
-      - id: foo-use1-dev
-        env: dev
-        region: use1
-        cluster: foo.dev.aws.viacbs.tech
+      - name: test-app
+        path: apps/app1
   template:
     metadata:
-      name: '{{id}}'
-      namespace: bar
-      finalizers:
-      - resources-finalizer.argocd.argoproj.io
+      name: '{{name}}'
     spec:
-      project: abcd
+      project: default
+      source:
+        repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: default
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
-      source:
-        repoURL: 'https://github.com/viacbs/foo-backend-support-services.git'
-        targetRevision: HEAD
-        path: '{{region}}/{{env}}'
-      destination:
-        server: '{{cluster}}'
-        namespace: bar
