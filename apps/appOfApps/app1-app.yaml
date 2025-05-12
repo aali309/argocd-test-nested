@@ -19,7 +19,7 @@ spec:
         targetRevision: HEAD
         path: '{{path}}'
       destination:
-        server: 'https://kubernetes.default.svc'
+        server: 'https://fake-cluster.argocd-b.svc'
         namespace: argocd-b    # ✅ This is key
       syncPolicy:
         automated:
