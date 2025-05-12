@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: simple-test
-  namespace: argocd-b
+  name: app-of-apps
+  namespace: argocd-a
 spec:
   generators:
-  - list:
-      elements:
-      - name: test-app
-        path: apps/app1
+    - list:
+        elements:
+          - name: app1
+            path: apps/app1
   template:
     metadata:
       name: '{{name}}'
@@ -20,7 +20,7 @@ spec:
         path: '{{path}}'
       destination:
         server: 'https://kubernetes.default.svc'
-        namespace: default
+        namespace: argocd-b    # ✅ This is key
       syncPolicy:
         automated:
           prune: true
