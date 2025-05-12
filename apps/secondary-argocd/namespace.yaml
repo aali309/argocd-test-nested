@@ -1,0 +1,5 @@
+# Creates namespace-b
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: namespace-b

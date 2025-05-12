@@ -1,27 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
-  name: app-of-apps
-  namespace: argocd-a
+  name: app1
+  namespace: argocd-b
 spec:
-  generators:
-    - list:
-        elements:
-          - name: app1
-            path: apps/app1
-  template:
-    metadata:
-      name: '{{name}}'
-    spec:
-      project: default
-      source:
-        repoURL: 'https://github.com/aali309/argocd-test-nested.git'
-        targetRevision: HEAD
-        path: '{{path}}'
-      destination:
-        server: 'https://fake-cluster.argocd-b.svc'
-        namespace: argocd-b    # ✅ This is key
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+  project: default
+  source:
+    repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+    targetRevision: HEAD
+    path: apps/app1
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: app1
+  syncPolicy:
+    automated: {}

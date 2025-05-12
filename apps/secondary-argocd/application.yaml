@@ -1,0 +1,18 @@
+# App-of-Apps managed by the secondary Argo CD instance
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: namespace-b
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git  # Replace with your repo URL
+    targetRevision: main
+    path: apps/app-of-apps  # Path to your App-of-Apps manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true

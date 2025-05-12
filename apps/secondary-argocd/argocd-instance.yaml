@@ -1,0 +1,19 @@
+# Deploys a secondary Argo CD instance in namespace-b
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: secondary-argocd
+  namespace: namespace-b
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argo-cd.git
+    targetRevision: stable
+    path: manifests/install.yaml  # Installs core Argo CD components
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: namespace-b
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
