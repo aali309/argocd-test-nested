@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/argoproj/argo-cd.git
     targetRevision: stable
-    path: manifests/install.yaml  # Installs core Argo CD components
+    path: manifests  # Installs core Argo CD components
   destination:
     server: https://kubernetes.default.svc
     namespace: namespace-b
