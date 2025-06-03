@@ -21,4 +21,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
-  namespace: argocd-e2e
+  namespace: argocd
