@@ -1,0 +1,5 @@
+apiVersion: v2
+name: values-test
+description: A test chart to reproduce ArgoCD values update issue
+type: application
+version: 0.1.0
