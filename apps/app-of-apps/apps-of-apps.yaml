@@ -7,12 +7,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/aali309/argocd-test-nested.git  # Replace with your repo URL
+    repoURL: https://github.com/aali309/argocd-test-nested.git # Replace with your repo URL
     targetRevision: main
-    path: apps/app-of-apps  # Path to your App-of-Apps manifests
+    path: apps/app-of-apps # Path to your App-of-Apps manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: namespace-b
   syncPolicy:
     automated:
       selfHeal: true
