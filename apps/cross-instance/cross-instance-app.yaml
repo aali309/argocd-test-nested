@@ -11,7 +11,7 @@ spec:
     path: guestbook
   destination:
     server: https://kubernetes.default.svc
-    namespace: namespace-b
+    namespace: argocd-e2e
   syncPolicy:
     automated:
       prune: true

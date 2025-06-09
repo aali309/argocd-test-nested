@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps
-  namespace: namespace-b
+  namespace: argocd-e2e
 spec:
   project: default
   source:
@@ -12,7 +12,7 @@ spec:
     path: apps/app-of-apps # Path to your App-of-Apps manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: namespace-b
+    namespace: argocd-e2e
   syncPolicy:
     automated:
       selfHeal: true
