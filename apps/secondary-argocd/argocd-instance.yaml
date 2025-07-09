@@ -4,12 +4,31 @@ kind: Application
 metadata:
   name: secondary-argocd
   namespace: namespace-a
+  annotations:
+    argocd.argoproj.io/managed-by-url: "https://argocd-instance-b.example.com"
 spec:
   project: default
   source:
-    repoURL: https://github.com/argoproj/argo-cd.git
-    targetRevision: stable
-    path: manifests  # Installs core Argo CD components
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 5.51.6
+    chart: argo-cd
+    helm:
+      values: |
+        server:
+          extraArgs:
+            - --insecure
+          ingress:
+            enabled: true
+            annotations:
+              kubernetes.io/ingress.class: nginx
+            hosts:
+              - host: argocd-instance-b.example.com
+                paths:
+                  - path: /
+                    pathType: Prefix
+        configs:
+          secret:
+            argocdServerAdminPassword: "$2a$10$rQZ9VNJp9VK9VK9VK9VK9O"
   destination:
     server: https://kubernetes.default.svc
     namespace: namespace-b

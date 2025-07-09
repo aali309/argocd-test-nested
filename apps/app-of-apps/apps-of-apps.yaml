@@ -3,13 +3,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps
-  namespace: argocd-e2e
+  namespace: namespace-b
+  annotations:
+    argocd.argoproj.io/managed-by-url: "https://argocd-instance-b.example.com"
 spec:
   project: default
   source:
-    repoURL: https://github.com/aali309/argocd-test-nested.git # Replace with your repo URL
+    repoURL: https://github.com/aali309/argocd-test-nested.git
     targetRevision: main
-    path: apps/app-of-apps # Path to your App-of-Apps manifests
+    path: apps/app-of-apps
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd-e2e

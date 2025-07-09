@@ -2,7 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cross-instance-app
-  namespace: namespace-a
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/managed-by-url: "https://argocd-instance-b.example.com"
 spec:
   project: default
   source:
