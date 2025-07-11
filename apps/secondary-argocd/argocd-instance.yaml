@@ -1,4 +1,3 @@
-# Deploys a secondary Argo CD instance in namespace-b
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -26,9 +25,6 @@ spec:
                 paths:
                   - path: /
                     pathType: Prefix
-        configs:
-          secret:
-            argocdServerAdminPassword: "$2a$10$rQZ9VNJp9VK9VK9VK9VK9O"
   destination:
     server: https://kubernetes.default.svc
     namespace: namespace-b
