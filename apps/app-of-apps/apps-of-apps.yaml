@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: app-of-apps
   namespace: namespace-b
+  annotations:
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081"
 spec:
   project: default
   source:
