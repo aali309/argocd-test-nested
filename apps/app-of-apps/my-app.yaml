@@ -4,7 +4,7 @@ metadata:
   name: my-app
   namespace: namespace-b
   annotations:
-    argocd.argoproj.io/managed-by-url: "https://localhost:8081"
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081"
 spec:
   project: default
   source:
