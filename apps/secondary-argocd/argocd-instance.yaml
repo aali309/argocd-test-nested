@@ -3,9 +3,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: secondary-argocd
-  namespace: namespace-a
+  namespace: argocd-e2e
   annotations:
-    argocd.argoproj.io/managed-by-url: "https://argocd-instance-b.example.com"
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081"
 spec:
   project: default
   source:
