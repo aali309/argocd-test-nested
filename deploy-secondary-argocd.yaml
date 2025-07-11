@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: deploy-secondary-argocd
-  namespace: namespace-a # Primary Argo CD's namespace
+  namespace: argocd-e2e # Primary Argo CD's namespace
 spec:
   project: default
   source:
