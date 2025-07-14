@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: secondary-argocd
+  namespace: argocd-e2e
+  annotations:
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081" # Replace with actual secondary ArgoCD URL in real setup
+spec:
+  project: default
+  source:
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 5.51.6
+    chart: argo-cd
+    helm:
+      values: |
+        server:
+          extraArgs:
+            - --insecure
+          ingress:
+            enabled: true
+            annotations:
+              kubernetes.io/ingress.class: nginx
+            hosts:
+              - host: argocd-instance-b.example.com
+                paths:
+                  - path: /
+                    pathType: Prefix
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: namespace-b
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

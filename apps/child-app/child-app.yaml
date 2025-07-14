@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: child-app
+  namespace: namespace-b
+  annotations:
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081" # Replace with actual secondary ArgoCD URL in real setup
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/child-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: namespace-b
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
