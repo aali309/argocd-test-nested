@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: namespace-b-application-controller
+  name: argocd-e2e-application-controller
 rules:
 - apiGroups: [ "argoproj.io" ]
   resources: [ "appprojects", "applications", "applicationsets" ]
@@ -52,12 +52,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: namespace-b-application-controller
+  name: argocd-e2e-application-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: namespace-b-application-controller
+  name: argocd-e2e-application-controller
 subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
-  namespace: namespace-b
+  namespace: argocd-e2e
