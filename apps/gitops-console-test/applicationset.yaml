@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: gitops-console-test
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/name: gitops-console-test
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+  annotations:
+    argocd.argoproj.io/description: "ApplicationSet for testing gitops-console-plugin functionality"
+spec:
+  goTemplate: true
+  goTemplateOptions: [ "missingkey=error" ]
+  generators:
+  - list:
+      elements:
+      - name: test-app-1
+        environment: dev
+        namespace: gitops-test-ns-1
+        path: apps/gitops-console-test/app1
+      - name: test-app-2
+        environment: staging
+        namespace: gitops-test-ns-2
+        path: apps/gitops-console-test/app2
+      - name: test-app-3
+        environment: prod
+        namespace: gitops-test-ns-3
+        path: apps/gitops-console-test/app3
+  template:
+    metadata:
+      name: '{{.name}}-{{.environment}}'
+      namespace: openshift-gitops
+      labels:
+        app.kubernetes.io/name: '{{.name}}'
+        app.kubernetes.io/part-of: gitops-console-plugin-test
+        environment: '{{.environment}}'
+      annotations:
+        argocd.argoproj.io/description: "Test application for {{.environment}} environment"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/aali309/argocd-test-nested.git
+        targetRevision: main
+        path: '{{.path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

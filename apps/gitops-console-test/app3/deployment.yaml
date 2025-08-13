@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app-3-deployment
+  namespace: gitops-test-ns-3
+  labels:
+    app: test-app-3
+    environment: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-app-3
+  template:
+    metadata:
+      labels:
+        app: test-app-3
+        environment: prod
+    spec:
+      containers:
+      - name: test-app-3
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-3-service
+  namespace: gitops-test-ns-3
+  labels:
+    app: test-app-3
+spec:
+  selector:
+    app: test-app-3
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP

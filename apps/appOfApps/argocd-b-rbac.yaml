@@ -4,7 +4,7 @@ metadata:
   name: argocd-e2e-application-controller
 rules:
 - apiGroups: [ "argoproj.io" ]
-  resources: [ "appprojects", "applications", "applicationsets" ]
+  resources: [ "appprojects", "applications", "applicationsets", "argocdexports", "argocds", "namespacemanagements", "notificationsconfigurations" ]
   verbs: [ "*" ]
 - apiGroups: [ "" ]
   resources: [ "services", "endpoints", "pods", "secrets", "configmaps", "events", "serviceaccounts", "persistentvolumes", "persistentvolumeclaims", "namespaces", "limitranges", "resourcequotas", "replicationcontrollers", "podtemplates", "nodes" ]
@@ -48,6 +48,9 @@ rules:
 - apiGroups: [ "policy" ]
   resources: [ "poddisruptionbudgets" ]
   verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "cluster.open-cluster-management.io" ]
+  resources: [ "placementdecisions" ]
+  verbs: [ "get", "list", "watch" ]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -61,3 +64,16 @@ subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
   namespace: argocd-e2e
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argocd-namespace-b-application-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argocd-e2e-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: namespace-b
