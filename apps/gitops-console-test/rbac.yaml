@@ -1,0 +1,120 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gitops-console-test-controller
+rules:
+- apiGroups: [ "" ]
+  resources: [ "services", "endpoints", "pods", "secrets", "configmaps", "events", "serviceaccounts", "persistentvolumes", "persistentvolumeclaims", "namespaces" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apps" ]
+  resources: [ "deployments", "statefulsets", "daemonsets", "replicasets", "controllerrevisions" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "clusterroles", "clusterrolebindings", "roles", "rolebindings" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gitops-console-test-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gitops-console-test-controller
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+---
+# Namespace-specific roles for each test namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitops-test-admin
+  namespace: gitops-test-ns-1
+rules:
+- apiGroups: [ "" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "apps" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitops-test-admin
+  namespace: gitops-test-ns-2
+rules:
+- apiGroups: [ "" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "apps" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitops-test-admin
+  namespace: gitops-test-ns-3
+rules:
+- apiGroups: [ "" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "apps" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "*" ]
+---
+# RoleBindings for each namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitops-test-admin-binding
+  namespace: gitops-test-ns-1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitops-test-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitops-test-admin-binding
+  namespace: gitops-test-ns-2
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitops-test-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitops-test-admin-binding
+  namespace: gitops-test-ns-3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitops-test-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops

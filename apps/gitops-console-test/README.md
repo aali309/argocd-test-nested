@@ -37,10 +37,15 @@ Each application includes:
 To deploy this test setup:
 
 ```bash
+# First, apply RBAC permissions
+kubectl apply -f apps/gitops-console-test/rbac.yaml
+
+# Then, apply the ApplicationSet
 kubectl apply -f apps/gitops-console-test/applicationset.yaml
 ```
 
 This will create:
+- RBAC permissions for ArgoCD controller to manage test namespaces
 - 1 ApplicationSet in `openshift-gitops` namespace
 - 3 Applications (one for each environment)
 - 3 namespaces with deployments and services
