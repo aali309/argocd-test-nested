@@ -20,10 +20,10 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/argoproj/argocd-example-apps
+        repoURL: https://github.com/aali309/argocd-test-nested
         targetRevision: HEAD
-        path: guestbook
+        path: apps/app1
       destination:
         server: '{{url}}'
-        namespace: guestbook
+        namespace: '{{name}}'
       # No strategy specified = AllAtOnce (default)

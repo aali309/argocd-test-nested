@@ -7,18 +7,21 @@ This folder contains ApplicationSet manifests to test different progressive sync
 ### 1. Default AllAtOnce Strategy
 **File:** `applicationset-allatonce-default.yaml`
 - Creates 2 applications: `test-app-1` and `test-app-2`
+- Uses `apps/app1` from your repo
 - No strategy specified (defaults to AllAtOnce)
 - All applications should be created simultaneously
 
 ### 2. Explicit AllAtOnce Strategy
 **File:** `applicationset-explicit-allatonce.yaml`
 - Creates 1 application: `test-app-3`
+- Uses `apps/app3` from your repo
 - Explicitly specifies `AllAtOnce` strategy
 - Application should be created immediately
 
 ### 3. RollingSync Strategy
 **File:** `applicationset-rollingsync.yaml`
 - Creates 2 applications: `test-app-4` and `test-app-5`
+- Uses `apps/app4` from your repo
 - Uses `RollingSync` strategy with 2 steps
 - Applications should be created in sequence:
   1. First step: `test-app-4`
