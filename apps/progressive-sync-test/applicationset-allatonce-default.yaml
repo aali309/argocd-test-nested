@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-appset-allatonce
+  namespace: argocd-e2e
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: in-cluster
+        url: https://kubernetes.default.svc
+        name: test-app-1
+      - cluster: in-cluster
+        url: https://kubernetes.default.svc
+        name: test-app-2
+  template:
+    metadata:
+      name: '{{name}}'
+      namespace: argocd-e2e
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps
+        targetRevision: HEAD
+        path: guestbook
+      destination:
+        server: '{{url}}'
+        namespace: guestbook
+      # No strategy specified = AllAtOnce (default)

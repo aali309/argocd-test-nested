@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-appset-rollingsync
+  namespace: argocd-e2e
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: in-cluster
+        url: https://kubernetes.default.svc
+        name: test-app-4
+      - cluster: in-cluster
+        url: https://kubernetes.default.svc
+        name: test-app-5
+  template:
+    metadata:
+      name: '{{name}}'
+      namespace: argocd-e2e
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/argocd-example-apps
+        targetRevision: HEAD
+        path: guestbook
+      destination:
+        server: '{{url}}'
+        namespace: guestbook
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+      - matchExpressions:
+        - key: name
+          operator: In
+          values:
+          - test-app-4
+      - matchExpressions:
+        - key: name
+          operator: In
+          values:
+          - test-app-5
