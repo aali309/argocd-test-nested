@@ -25,5 +25,5 @@ spec:
         path: apps/app1
       destination:
         server: '{{url}}'
-        namespace: '{{name}}'
+        namespace: argocd-e2e
       # No strategy specified = AllAtOnce (default)

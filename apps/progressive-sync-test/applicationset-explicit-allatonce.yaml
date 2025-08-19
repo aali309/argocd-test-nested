@@ -22,6 +22,6 @@ spec:
         path: apps/app3
       destination:
         server: '{{url}}'
-        namespace: '{{name}}'
+        namespace: argocd-e2e
   strategy:
     type: AllAtOnce
