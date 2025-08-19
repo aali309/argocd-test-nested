@@ -10,9 +10,11 @@ spec:
       - cluster: in-cluster
         url: https://kubernetes.default.svc
         name: test-app-4
+        appPath: app4
       - cluster: in-cluster
         url: https://kubernetes.default.svc
         name: test-app-5
+        appPath: app5
   template:
     metadata:
       name: '{{name}}'
@@ -22,7 +24,7 @@ spec:
       source:
         repoURL: https://github.com/aali309/argocd-test-nested
         targetRevision: HEAD
-        path: apps/app4
+        path: apps/{{appPath}}
       destination:
         server: '{{url}}'
         namespace: argocd-e2e
@@ -31,12 +33,12 @@ spec:
     rollingSync:
       steps:
       - matchExpressions:
-        - key: name
+        - key: appPath
           operator: In
           values:
-          - test-app-4
+          - app4
       - matchExpressions:
-        - key: name
+        - key: appPath
           operator: In
           values:
-          - test-app-5
+          - app5
