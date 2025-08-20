@@ -28,6 +28,10 @@ spec:
       destination:
         server: '{{url}}'
         namespace: argocd-e2e
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
   strategy:
     type: RollingSync
     rollingSync:

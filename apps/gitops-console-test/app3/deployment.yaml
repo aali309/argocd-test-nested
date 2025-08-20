@@ -17,6 +17,10 @@ spec:
         app: test-app-3
         environment: prod
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
       containers:
       - name: test-app-3
         image: nginx:1.25

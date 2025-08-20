@@ -17,6 +17,10 @@ spec:
         app: test-app-2
         environment: staging
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        fsGroup: 101
       containers:
       - name: test-app-2
         image: nginx:1.25
