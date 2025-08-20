@@ -17,13 +17,9 @@ spec:
         app: test-app-3
         environment: prod
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000890000
-        fsGroup: 1000890000
       containers:
       - name: test-app-3
-        image: nginx:1.25
+        image: nginxinc/nginx-unprivileged:1.25
         ports:
         - containerPort: 80
         resources:
