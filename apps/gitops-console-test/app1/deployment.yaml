@@ -17,6 +17,10 @@ spec:
         app: test-app-1
         environment: dev
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000890000
+        fsGroup: 1000890000
       containers:
       - name: test-app-1
         image: nginx:1.25
