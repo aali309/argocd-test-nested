@@ -20,7 +20,7 @@ spec:
       name: '{{name}}'
       namespace: argocd-e2e
       labels:
-        appPath: {{appPath}}
+        appPath: '{{appPath}}'
     spec:
       project: default
       source:
