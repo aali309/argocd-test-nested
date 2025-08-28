@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-sorting-matrix-generator
+  namespace: openshift-gitops
+spec:
+  generators:
+  - matrix:
+      generators:
+      - list:
+          elements:
+          - name: app-matrix-1
+            environment: dev
+          - name: app-matrix-2
+            environment: staging
+          - name: app-matrix-3
+            environment: prod
+      - list:
+          elements:
+          - cluster: in-cluster
+            url: https://kubernetes.default.svc
+            region: us-east
+          - cluster: in-cluster
+            url: https://kubernetes.default.svc
+            region: us-west
+  template:
+    metadata:
+      name: '{{name}}-{{environment}}-{{region}}'
+      namespace: openshift-gitops
+      labels:
+        environment: '{{environment}}'
+        region: '{{region}}'
+        generator-type: matrix
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/aali309/argocd-test-nested
+        targetRevision: HEAD
+        path: apps/app1
+      destination:
+        server: '{{url}}'
+        namespace: '{{name}}-{{environment}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
