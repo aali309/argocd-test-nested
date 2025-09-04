@@ -3,22 +3,35 @@ kind: ClusterRole
 metadata:
   name: argocd-e2e-controller-reader
 rules:
-  - apiGroups: ["apps"]
-    resources: ["statefulsets"]
-    verbs: ["get", "list", "watch"]
-  - apiGroups: ["rbac.authorization.k8s.io"]
-    resources: ["rolebindings"]
-    verbs: ["get", "list", "watch"]
-
+# Core resources
+- apiGroups: [ "" ]
+  resources: [ "nodes", "namespaces", "pods", "services", "configmaps", "secrets", "persistentvolumes", "persistentvolumeclaims" ]
+  verbs: [ "get", "list", "watch" ]
+# Apps resources
+- apiGroups: [ "apps" ]
+  resources: [ "deployments", "replicasets", "statefulsets", "daemonsets" ]
+  verbs: [ "get", "list", "watch" ]
+# RBAC resources
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "rolebindings", "roles", "clusterroles", "clusterrolebindings" ]
+  verbs: [ "get", "list", "watch" ]
+# Extensions resources
+- apiGroups: [ "extensions" ]
+  resources: [ "deployments", "replicasets", "ingresses" ]
+  verbs: [ "get", "list", "watch" ]
+# Networking resources
+- apiGroups: [ "networking.k8s.io" ]
+  resources: [ "ingresses", "networkpolicies" ]
+  verbs: [ "get", "list", "watch" ]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: argocd-e2e-controller-reader-binding
 subjects:
-  - kind: ServiceAccount
-    name: argocd-application-controller
-    namespace: argocd-e2e
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: argocd-e2e
 roleRef:
   kind: ClusterRole
   name: argocd-e2e-controller-reader
