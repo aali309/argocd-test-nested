@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app4-config
+  namespace: app4
+data:
+  environment: "prod"
+  app-name: "app4"
+  version: "1.0.0"
+  message: "Hello from App4 Production Environment"
