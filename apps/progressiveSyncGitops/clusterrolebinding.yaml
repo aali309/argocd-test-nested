@@ -1,0 +1,104 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-application-controller-manager
+rules:
+# Core resources - comprehensive list
+- apiGroups: [ "" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Apps resources
+- apiGroups: [ "apps" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# RBAC resources
+- apiGroups: [ "rbac.authorization.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Extensions resources
+- apiGroups: [ "extensions" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Networking resources
+- apiGroups: [ "networking.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Storage resources
+- apiGroups: [ "storage.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Batch resources
+- apiGroups: [ "batch" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Autoscaling resources
+- apiGroups: [ "autoscaling" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Policy resources
+- apiGroups: [ "policy" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Scheduling resources
+- apiGroups: [ "scheduling.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# Additional common API groups
+- apiGroups: [ "admissionregistration.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apiextensions.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apiregistration.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "coordination.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "discovery.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "flowcontrol.apiserver.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "metrics.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "node.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "scheduling.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# OpenShift Cluster Management resources
+- apiGroups: [ "cluster.open-cluster-management.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# OpenShift specific resources
+- apiGroups: [ "operator.openshift.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "config.openshift.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "console.openshift.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+# ArgoCD specific resources
+- apiGroups: [ "argoproj.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argocd-application-controller-manager-binding
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+roleRef:
+  kind: ClusterRole
+  name: argocd-application-controller-manager
+  apiGroup: rbac.authorization.k8s.io
