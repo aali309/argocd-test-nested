@@ -12,27 +12,30 @@ spec:
       labels:
         app: postgresql
     spec:
-      securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
-      containers:
-      - name: postgresql
+      initContainers:
+      - name: fix-permissions
         image: postgres:13
-        securityContext:
-          runAsUser: 0
-          allowPrivilegeEscalation: true
-          capabilities:
-            add:
-            - SYS_CHROOT
-            - SETUID
-            - SETGID
-        env:
-        - name: POSTGRES_HOST_AUTH_METHOD
-          value: trust
+        command: [ "sh", "-c", "chown -R 999:999 /var/lib/postgresql/data || true" ]
         volumeMounts:
         - name: postgresql-data
           mountPath: /var/lib/postgresql/data
+        securityContext:
+          runAsUser: 0
+      containers:
+      - name: postgresql
+        image: postgres:13
+        env:
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
+          fsGroup: 999
   volumeClaimTemplates:
   - metadata:
       name: postgresql-data
