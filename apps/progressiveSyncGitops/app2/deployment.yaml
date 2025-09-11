@@ -17,9 +17,8 @@ spec:
     spec:
       containers:
       - name: app2
-        image: httpd:2.4
-        ports:
-        - containerPort: 80
+        image: busybox:1.35
+        command: [ 'sh', '-c', 'echo "App2 Staging Environment - Hello from Progressive Sync!" && sleep 3600' ]
         resources:
           requests:
             memory: "64Mi"
@@ -27,8 +26,6 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
-        securityContext:
-          runAsUser: 1000770000
         env:
         - name: APP_NAME
           valueFrom:
