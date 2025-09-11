@@ -28,7 +28,7 @@ spec:
             memory: "128Mi"
             cpu: "100m"
         securityContext:
-          runAsUser: 0
+          runAsUser: 1000770000
         env:
         - name: APP_NAME
           valueFrom:
