@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: app3
-        image: nginx:1.21
+        image: httpd:2.4
         ports:
         - containerPort: 80
         resources:
