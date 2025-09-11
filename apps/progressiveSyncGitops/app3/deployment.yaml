@@ -6,7 +6,7 @@ metadata:
   labels:
     app: app3
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: app3
@@ -20,6 +20,13 @@ spec:
         image: nginx:1.21
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
         env:
         - name: APP_NAME
           valueFrom:

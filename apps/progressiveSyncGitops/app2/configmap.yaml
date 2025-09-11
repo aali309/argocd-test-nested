@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app2-config
+  namespace: app2
+data:
+  environment: "staging"
+  app-name: "app2"
+  version: "1.0.0"
+  message: "Hello from App2 Staging Environment"

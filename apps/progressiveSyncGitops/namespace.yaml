@@ -8,13 +8,13 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: app3
+  name: app2
   labels:
     app.kubernetes.io/managed-by: argocd
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: app4
+  name: app3
   labels:
     app.kubernetes.io/managed-by: argocd

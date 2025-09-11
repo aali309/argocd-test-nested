@@ -1,35 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app4-deployment
-  namespace: app4
+  name: app2-deployment
+  namespace: app2
   labels:
-    app: app4
+    app: app2
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: app4
+      app: app2
   template:
     metadata:
       labels:
-        app: app4
+        app: app2
     spec:
       containers:
-      - name: app4
+      - name: app2
         image: nginx:1.21
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
         env:
         - name: APP_NAME
           valueFrom:
             configMapKeyRef:
-              name: app4-config
+              name: app2-config
               key: app-name
         - name: ENVIRONMENT
           valueFrom:
             configMapKeyRef:
-              name: app4-config
+              name: app2-config
               key: environment
         volumeMounts:
         - name: config-volume
@@ -37,4 +44,4 @@ spec:
       volumes:
       - name: config-volume
         configMap:
-          name: app4-config
+          name: app2-config
