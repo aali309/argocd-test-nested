@@ -27,6 +27,8 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
+        securityContext:
+          runAsUser: 0
         env:
         - name: APP_NAME
           valueFrom:
