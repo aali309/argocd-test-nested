@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-app
+  namespace: argocd-e2e
+  labels:
+    app.kubernetes.io/name: web-app
+    app.kubernetes.io/part-of: parent-child-testing
+    app.kubernetes.io/component: child-app
+  annotations:
+    argocd.argoproj.io/description: "Child application: Web application"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/parent-child-test/web-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: web-app-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

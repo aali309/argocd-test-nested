@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-service
+  namespace: argocd-e2e
+  labels:
+    app.kubernetes.io/name: api-service
+    app.kubernetes.io/part-of: parent-child-testing
+    app.kubernetes.io/component: child-app
+  annotations:
+    argocd.argoproj.io/description: "Child application: API service with StatefulSet"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/parent-child-test/api-service
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: api-service-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

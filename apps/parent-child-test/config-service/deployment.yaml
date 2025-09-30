@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service
+  labels:
+    app: config-service
+    app.kubernetes.io/name: config-service
+    app.kubernetes.io/part-of: parent-child-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-service
+  template:
+    metadata:
+      labels:
+        app: config-service
+        app.kubernetes.io/name: config-service
+        app.kubernetes.io/part-of: parent-child-testing
+    spec:
+      containers:
+      - name: config-service
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: app-config-volume
+          mountPath: /etc/app
+          readOnly: true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: config-volume
+        configMap:
+          name: config-service-config
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+      - name: app-config-volume
+        configMap:
+          name: config-service-config
+          items:
+          - key: app.properties
+            path: app.properties
