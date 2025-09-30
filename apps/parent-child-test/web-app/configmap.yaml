@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-app-config
+  labels:
+    app: web-app
+    app.kubernetes.io/name: web-app
+    app.kubernetes.io/part-of: parent-child-testing
+data:
+  nginx.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+            try_files $uri $uri/ /index.html;
+        }
+        
+        location /api {
+            proxy_pass http://api-service:3000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+        
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+    }
+  
+  app.properties: |
+    # Web Application Configuration
+    app.name=web-app
+    app.version=1.0.0
+    app.environment=production
+    
+    # API Configuration
+    api.base.url=http://api-service:3000
+    api.timeout=5000
+    api.retry.attempts=3
+    
+    # Feature Flags
+    feature.analytics.enabled=true
+    feature.debug.enabled=false
+    feature.maintenance.mode=false

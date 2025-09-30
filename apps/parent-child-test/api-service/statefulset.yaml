@@ -31,6 +31,21 @@ spec:
           value: "development"
         - name: PORT
           value: "3000"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-service-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: api-service-secrets
+              key: redis-url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: api-service-secrets
+              key: jwt-secret
         resources:
           requests:
             memory: "128Mi"

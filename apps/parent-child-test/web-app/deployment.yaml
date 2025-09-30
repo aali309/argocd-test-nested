@@ -26,6 +26,23 @@ spec:
         env:
         - name: ENVIRONMENT
           value: "dev"
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: web-app-secrets
+              key: api-key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: web-app-secrets
+              key: jwt-secret
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: app-config
+          mountPath: /etc/app
+          readOnly: true
         resources:
           requests:
             memory: "64Mi"
@@ -45,3 +62,16 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: web-app-config
+          items:
+          - key: nginx.conf
+            path: default.conf
+      - name: app-config
+        configMap:
+          name: web-app-config
+          items:
+          - key: app.properties
+            path: app.properties
