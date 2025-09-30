@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: parent-child-test
+  namespace: argocd-e2e
+  labels:
+    app.kubernetes.io/name: parent-child-test
+    app.kubernetes.io/part-of: parent-child-testing
+  annotations:
+    argocd.argoproj.io/description: "Parent application that manages child applications"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/parent-child-test/child-apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd-e2e
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
