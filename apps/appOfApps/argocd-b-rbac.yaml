@@ -1,3 +1,5 @@
+# RBAC configuration for ArgoCD application controllers
+# Includes permissions for newer Kubernetes API resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -13,7 +15,7 @@ rules:
   resources: [ "deployments", "statefulsets", "daemonsets", "replicasets", "controllerrevisions" ]
   verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
 - apiGroups: [ "storage.k8s.io" ]
-  resources: [ "storageclasses", "csidrivers", "csinodes", "volumeattachments", "csistoragecapacities" ]
+  resources: [ "storageclasses", "csidrivers", "csinodes", "volumeattachments", "csistoragecapacities", "volumeattributesclasses" ]
   verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
 - apiGroups: [ "flowcontrol.apiserver.k8s.io" ]
   resources: [ "flowschemas", "prioritylevelconfigurations" ]
@@ -34,10 +36,10 @@ rules:
   resources: [ "clusterroles", "clusterrolebindings", "roles", "rolebindings" ]
   verbs: [ "get", "list", "watch" ]
 - apiGroups: [ "admissionregistration.k8s.io" ]
-  resources: [ "validatingwebhookconfigurations", "mutatingwebhookconfigurations" ]
+  resources: [ "validatingwebhookconfigurations", "mutatingwebhookconfigurations", "validatingadmissionpolicies", "validatingadmissionpolicybindings" ]
   verbs: [ "get", "list", "watch" ]
 - apiGroups: [ "networking.k8s.io" ]
-  resources: [ "ingresses", "ingressclasses", "networkpolicies" ]
+  resources: [ "ingresses", "ingressclasses", "networkpolicies", "servicecidrs", "ipaddresses" ]
   verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
 - apiGroups: [ "node.k8s.io" ]
   resources: [ "runtimeclasses" ]
@@ -50,6 +52,12 @@ rules:
   verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
 - apiGroups: [ "cluster.open-cluster-management.io" ]
   resources: [ "placementdecisions" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "resource.k8s.io" ]
+  resources: [ "*" ]
+  verbs: [ "get", "list", "watch" ]
+- apiGroups: [ "certificates.k8s.io" ]
+  resources: [ "*" ]
   verbs: [ "get", "list", "watch" ]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
