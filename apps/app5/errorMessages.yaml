@@ -8,7 +8,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgresql-new
+      app: postgresql
   template:
     metadata:
       labels:
@@ -39,7 +39,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 2Gi
+          storage: 1Gi
         limits:
           storage: 1Gi
   - metadata:
