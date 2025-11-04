@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app5
+  namespace: argocd-e2e
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+    targetRevision: HEAD
+    path: apps/app5
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd-e2e
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
