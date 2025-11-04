@@ -39,7 +39,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
         limits:
           storage: 1Gi
   - metadata:
