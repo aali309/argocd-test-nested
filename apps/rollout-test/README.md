@@ -23,17 +23,27 @@ This folder contains Argo Rollout resources to test the Rollout Details page in 
 
 ## How to Use
 
-1. Apply the ArgoCD Application:
-   ```bash
-   kubectl apply -f apps/rollout-test/rollout-application.yaml
-   ```
+### Option 1: Using ArgoCD Application (Recommended)
 
-2. Or apply all resources directly:
-   ```bash
-   kubectl apply -f apps/rollout-test/
-   ```
+Apply the ArgoCD Application (for OpenShift GitOps, use `openshift-gitops` namespace):
+```bash
+kubectl apply -f apps/rollout-test/rollout-application.yaml
+```
 
-3. Access ArgoCD UI at `http://localhost:4000` and navigate to the `rollout-test` namespace
+The Application will automatically create the namespace and sync all resources.
+
+### Option 2: Apply Resources Directly
+
+If applying directly with kubectl, apply the namespace first, then the rest:
+```bash
+# Apply namespace first
+kubectl apply -f apps/rollout-test/namespace.yaml
+
+# Wait a moment for namespace to be ready, then apply the rest
+kubectl apply -f apps/rollout-test/ --ignore-not-found
+```
+
+3. Access ArgoCD UI (for OpenShift GitOps, typically at the cluster console) and navigate to the `rollout-test` namespace
 
 4. In the Dev Console, you should see:
    - **Rollouts** in the resource list
