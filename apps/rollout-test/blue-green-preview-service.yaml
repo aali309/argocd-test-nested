@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue-green-preview
+  namespace: rollout-test
+  labels:
+    app: blue-green-app
+spec:
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: blue-green-app
+
