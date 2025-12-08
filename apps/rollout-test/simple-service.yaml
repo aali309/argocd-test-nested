@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-service
+  namespace: rollout-test
+  labels:
+    app: simple-app
+spec:
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: simple-app
+
