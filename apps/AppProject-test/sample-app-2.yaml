@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app-2
+  namespace: appproject-test
+  labels:
+    app.kubernetes.io/name: sample-app-2
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+spec:
+  project: custom-project-with-description
+  source:
+    repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+    targetRevision: HEAD
+    path: apps/app3
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: appproject-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+

@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: custom-project-no-description
+  namespace: appproject-test
+  labels:
+    app.kubernetes.io/name: custom-project-no-description
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+    project-type: custom
+spec:
+  # No description field - tests "No Description" display
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: '*'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: appproject-test
+  labels:
+    app.kubernetes.io/name: appproject-test
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+

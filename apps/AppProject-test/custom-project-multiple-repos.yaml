@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: custom-project-multiple-repos
+  namespace: appproject-test
+  labels:
+    app.kubernetes.io/name: custom-project-multiple-repos
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+    project-type: custom
+spec:
+  description: "Custom project with multiple source repositories configured"
+  # Multiple source repositories
+  sourceRepos:
+  - 'https://github.com/aali309/argocd-test-nested.git'
+  - 'https://github.com/argoproj/argocd-example-apps.git'
+  - 'https://github.com/kubernetes/examples.git'
+  destinations:
+  - namespace: '*'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+

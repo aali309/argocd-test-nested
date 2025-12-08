@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appproject-test
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/name: appproject-test
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/aali309/argocd-test-nested.git'
+    targetRevision: HEAD
+    path: apps/AppProject-test
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: appproject-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

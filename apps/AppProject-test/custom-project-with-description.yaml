@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: custom-project-with-description
+  namespace: appproject-test
+  labels:
+    app.kubernetes.io/name: custom-project-with-description
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+    project-type: custom
+spec:
+  description: "Custom project for production workloads with comprehensive configuration"
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+  # Allow applications to deploy to any namespace
+  destinations:
+  - namespace: '*'
+    server: '*'
+  # Allow all namespaced-scoped resources to be created
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  # Allow all cluster-scoped resources to be created
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+

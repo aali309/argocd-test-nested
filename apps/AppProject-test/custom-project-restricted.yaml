@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: custom-project-restricted
+  namespace: appproject-test
+  labels:
+    app.kubernetes.io/name: custom-project-restricted
+    app.kubernetes.io/part-of: gitops-console-plugin-test
+    project-type: custom
+spec:
+  description: "Custom project with restricted permissions - specific repo and namespace only"
+  # Restricted to specific Git repo
+  sourceRepos:
+  - 'https://github.com/aali309/argocd-test-nested.git'
+  # Restricted to specific namespace
+  destinations:
+  - namespace: 'appproject-test'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: 'apps'
+    kind: 'Deployment'
+  - group: 'apps'
+    kind: 'StatefulSet'
+  - group: ''
+    kind: 'Service'
+  clusterResourceWhitelist: []
+
