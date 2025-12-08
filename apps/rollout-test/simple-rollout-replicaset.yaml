@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: simple-rollout-7d4b8f9d8f
+  namespace: rollout-test
+  labels:
+    app: simple-app
+  ownerReferences:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+    name: simple-rollout
+    uid: f4ede51f-f13c-4a6f-a5d2-8294ed6d6d3f
+    controller: true
+    blockOwnerDeletion: true
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: simple-app
+  template:
+    metadata:
+      labels:
+        app: simple-app
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000830000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: nginx
+        image: quay.io/openshift/origin-cli:latest
+        command:
+        - /bin/sh
+        - -c
+        - "while true; do echo 'HTTP/1.1 200 OK\n\nHello from simple-rollout' | nc -l -p 8080; done"
+        ports:
+        - containerPort: 8080
+          name: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000830000
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+
