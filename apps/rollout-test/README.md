@@ -2,74 +2,116 @@
 
 This folder contains Argo Rollout resources to test the Rollout Details page in Dev Console PR (#7299).
 
+## Prerequisites
+
+**Argo Rollouts Controller must be installed** before applying these resources. The controller processes Rollout resources and creates the necessary ReplicaSets and Pods.
+
+### Installing the Argo Rollouts Controller
+
+**Option 1: Using the install script (Recommended)**
+```bash
+chmod +x apps/rollout-test/install-controller.sh
+./apps/rollout-test/install-controller.sh
+```
+
+**Option 2: Manual installation**
+```bash
+# Create namespace
+kubectl create namespace argo-rollouts
+
+# Install controller
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+
+# Verify installation
+kubectl get pods -n argo-rollouts
+```
+
 ## Resources
 
-### Blue-Green Rollout
-- **Rollout**: `blue-green-rollout.yaml` - A Blue-Green deployment strategy with 3 replicas
-- **Active Service**: `blue-green-active-service.yaml` - Service pointing to the active version
-- **Preview Service**: `blue-green-preview-service.yaml` - Service pointing to the preview version
+### Rollouts
 
-### Canary Rollout
-- **Rollout**: `canary-rollout.yaml` - A Canary deployment strategy with progressive traffic shifting
-- **Stable Service**: `canary-stable-service.yaml` - Service pointing to the stable version
-- **Canary Service**: `canary-service.yaml` - Service pointing to the canary version
+1. **`simple-rollout.yaml`** - Simple rollout with 3 replicas that will create pods
+   - Uses unprivileged nginx image (works in restricted security contexts)
+   - Blue-Green strategy with auto-promotion enabled
+   - **This rollout will show pods in the UI**
+
+2. **`blue-green-rollout.yaml`** - Blue-Green deployment strategy with 3 replicas
+   - Active Service: `blue-green-active-service.yaml`
+   - Preview Service: `blue-green-preview-service.yaml`
+
+3. **`canary-rollout.yaml`** - Canary deployment strategy with progressive traffic shifting
+   - Stable Service: `canary-stable-service.yaml`
+   - Canary Service: `canary-service.yaml`
 
 ### Analysis Templates
-- **AnalysisTemplate**: `analysis-template.yaml` - Namespace-scoped analysis template for success rate
-- **ClusterAnalysisTemplate**: `cluster-analysis-template.yaml` - Cluster-scoped analysis template for HTTP error rate
+
+- **`analysis-template.yaml`** - Namespace-scoped analysis template for success rate
+- **`cluster-analysis-template.yaml`** - Cluster-scoped analysis template for HTTP error rate
 
 ### ArgoCD Application
-- **Application**: `rollout-application.yaml` - ArgoCD Application to manage all rollout resources
+
+- **`rollout-application.yaml`** - ArgoCD Application to manage all rollout resources (optional)
 
 ## How to Use
 
-### Option 1: Using ArgoCD Application (Recommended)
+### Step 1: Install Argo Rollouts Controller (if not already installed)
 
-Apply the ArgoCD Application (for OpenShift GitOps, use `openshift-gitops` namespace):
 ```bash
-kubectl apply -f apps/rollout-test/rollout-application.yaml
+./apps/rollout-test/install-controller.sh
 ```
 
-The Application will automatically create the namespace and sync all resources.
+### Step 2: Apply Rollout Resources
 
-### Option 2: Apply Resources Directly
-
-If applying directly with kubectl, apply the namespace first, then the rest:
 ```bash
-# Apply namespace first
-kubectl apply -f apps/rollout-test/namespace.yaml
-
-# Wait a moment for namespace to be ready, then apply the rest
-kubectl apply -f apps/rollout-test/ --ignore-not-found
+kubectl apply -f apps/rollout-test/
 ```
 
-3. Access the rollouts in the Dev Console:
+This will create:
+- The `rollout-test` namespace
+- All Rollout resources
+- All Services
+- Analysis Templates
+- ArgoCD Application (if using)
 
-   **Option A: Via Resource List**
-   - Navigate to the `rollout-test` namespace in the Dev Console
-   - Look for "Argo Rollouts" or "Rollouts" in the resource list (left sidebar)
-   - Click on a rollout to view its details
+### Step 3: Verify Rollouts and Pods
 
-   **Option B: Direct URL**
-   - Navigate directly to: `/k8s/ns/rollout-test/argoproj.io~v1alpha1~Rollout/blue-green-rollout`
-   - Or: `/k8s/ns/rollout-test/argoproj.io~v1alpha1~Rollout/canary-rollout`
+```bash
+# Check rollouts
+kubectl get rollouts -n rollout-test
 
-   **Option C: Via GitOps Plugin**
-   - Navigate to the GitOps section in the Dev Console
-   - Look for "Argo Rollouts" in the navigation menu
-   - This should show a list of all rollouts
+# Check pods (simple-rollout should have 3 pods)
+kubectl get pods -n rollout-test -l app=simple-app
 
-4. In the Rollout Details page, you should see:
-   - **Details tab** showing:
-     - Replicas (editable)
-     - Status
-     - Strategy (Blue-Green or Canary)
-     - Services (Active/Preview for Blue-Green, Stable/Canary for Canary)
-     - Analysis Templates (for Canary strategy)
-   - **YAML tab** - View/edit the rollout YAML
-   - **Events tab** - View rollout events
+# Check rollout status
+kubectl get rollout simple-rollout -n rollout-test
+```
 
-**Note**: If you don't see "Argo Rollouts" in the resource list, the console plugin might need the `ARGO_ROLLOUT` feature flag enabled. Check your console plugin configuration.
+## Testing the List Page
+
+Access the rollouts in the Dev Console:
+
+**Option A: Via Resource List**
+- Navigate to the `rollout-test` namespace in the Dev Console
+- Look for "Argo Rollouts" or "Rollouts" in the resource list (left sidebar)
+- Click on a rollout to view its details
+
+**Option B: Direct URL**
+- Navigate directly to: `/k8s/ns/rollout-test/argoproj.io~v1alpha1~Rollout/simple-rollout`
+- Or: `/k8s/ns/rollout-test/argoproj.io~v1alpha1~Rollout/blue-green-rollout`
+- Or: `/k8s/ns/rollout-test/argoproj.io~v1alpha1~Rollout/canary-rollout`
+
+**Option C: Via GitOps Plugin**
+- Navigate to the GitOps section in the Dev Console
+- Look for "Argo Rollouts" in the navigation menu
+- This should show a list of all rollouts
+
+## Expected Results
+
+After applying the resources and waiting for the controller to process them:
+
+- **simple-rollout**: Should show **3 pods** in the Pods column (this is the one that works!)
+- **blue-green-rollout**: May show pods depending on promotion status
+- **canary-rollout**: May show pods depending on canary steps
 
 ## Testing the PR Features
 
@@ -86,10 +128,24 @@ The PR adds the following features that you can test:
 
 3. **Conditions**: View rollout conditions in the Conditions section
 
+4. **Pods Column**: The `simple-rollout` should display "3" in the Pods column
+
 ## Cleanup
 
 To clean up the test resources:
+
 ```bash
+# Delete rollout resources
 kubectl delete -f apps/rollout-test/
+
+# Optional: Uninstall Argo Rollouts controller
+kubectl delete -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+kubectl delete namespace argo-rollouts
 ```
 
+## Notes
+
+- The Argo Rollouts controller must be installed for Rollout resources to work properly
+- Without the controller, Rollouts will exist but won't create pods or update status
+- The `simple-rollout` uses `nginxinc/nginx-unprivileged:1.21` which works in restricted security contexts (OpenShift)
+- Some features may require the `ARGO_ROLLOUT` feature flag to be enabled in the console plugin
