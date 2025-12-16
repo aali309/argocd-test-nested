@@ -7,12 +7,30 @@ metadata:
     app.kubernetes.io/name: custom-project-multiple-destinations
     app.kubernetes.io/part-of: gitops-console-plugin-test
     project-type: custom
+    environment: production
+    team: platform
+    version: v1.0.0
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    description: "Comprehensive test project for validating all AppProject UI features"
+    contact: "platform-team@example.com"
 spec:
   description: "Custom project with multiple destination namespaces configured"
+  # Multiple source repositories with negation patterns (deny rules)
   sourceRepos:
+  # Do not use test repos from argoproj
+  - '!https://github.com/argoproj/test.git'
+  # Allow specific repos
+  - 'https://github.com/aali309/argocd-test-nested.git'
+  - 'https://github.com/argoproj/argocd-example-apps.git'
+  # Any other repo is fine
   - '*'
-  # Multiple destination namespaces
+  # Multiple destination namespaces with negation patterns
   destinations:
+  # Do not allow any app to be installed in kube-system
+  - namespace: '!kube-system'
+    server: '*'
+  # Allow specific namespaces
   - namespace: 'appproject-test'
     server: '*'
   - namespace: 'production'
@@ -21,10 +39,107 @@ spec:
     server: '*'
   - namespace: 'development'
     server: '*'
+  # Any other namespace is fine
+  - namespace: '*'
+    server: '*'
+  # Source namespaces - allow applications from specific namespaces
+  sourceNamespaces:
+  - 'appproject-test'
+  - 'production'
+  # Namespace resource whitelist (allowed resources)
   namespaceResourceWhitelist:
+  - group: 'apps'
+    kind: 'Deployment'
+  - group: 'apps'
+    kind: 'StatefulSet'
+  - group: 'apps'
+    kind: 'DaemonSet'
+  - group: ''
+    kind: 'Service'
+  - group: ''
+    kind: 'ConfigMap'
+  - group: ''
+    kind: 'Secret'
+  - group: 'networking.k8s.io'
+    kind: 'Ingress'
   - group: '*'
     kind: '*'
+  # Namespace resource blacklist (denied resources) - for Allow/Deny tab
+  namespaceResourceBlacklist:
+  - group: 'policy'
+    kind: 'PodDisruptionBudget'
+  - group: 'networking.k8s.io'
+    kind: 'NetworkPolicy'
+  # Cluster resource whitelist (allowed cluster-scoped resources)
   clusterResourceWhitelist:
+  - group: 'rbac.authorization.k8s.io'
+    kind: 'ClusterRole'
+  - group: 'rbac.authorization.k8s.io'
+    kind: 'ClusterRoleBinding'
+  - group: 'apiextensions.k8s.io'
+    kind: 'CustomResourceDefinition'
   - group: '*'
     kind: '*'
+  # Cluster resource blacklist (denied cluster-scoped resources) - for Allow/Deny tab
+  clusterResourceBlacklist:
+  - group: ''
+    kind: 'Namespace'
+  # Roles for RBAC - following pattern: proj:<project-name>:<role-name>
+  roles:
+  - name: admin
+    description: "Admin role with full access to all project resources"
+    policies:
+    - p, proj:custom-project-multiple-destinations:admin, applications, *, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:admin, repositories, get, *, allow
+    - p, proj:custom-project-multiple-destinations:admin, repositories, create, *, allow
+    - p, proj:custom-project-multiple-destinations:admin, repositories, update, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:admin, repositories, delete, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:admin, clusters, get, *, allow
+    - p, proj:custom-project-multiple-destinations:admin, logs, get, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:admin, exec, create, custom-project-multiple-destinations/*, allow
+    groups:
+    - platform-admins
+  - name: developer
+    description: "Developer role with sync and get permissions"
+    policies:
+    - p, proj:custom-project-multiple-destinations:developer, applications, get, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:developer, applications, sync, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:developer, applications, action/*, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:developer, logs, get, custom-project-multiple-destinations/*, allow
+    groups:
+    - developers
+  - name: viewer
+    description: "Viewer role with read-only access"
+    policies:
+    - p, proj:custom-project-multiple-destinations:viewer, applications, get, custom-project-multiple-destinations/*, allow
+    - p, proj:custom-project-multiple-destinations:viewer, logs, get, custom-project-multiple-destinations/*, allow
+    groups:
+    - viewers
+  - name: ci-cd
+    description: "CI/CD role for automated sync operations on specific apps"
+    policies:
+    - p, proj:custom-project-multiple-destinations:ci-cd, applications, sync, custom-project-multiple-destinations/multiple-dest-app-*, allow
+    - p, proj:custom-project-multiple-destinations:ci-cd, applications, get, custom-project-multiple-destinations/multiple-dest-app-*, allow
+    groups:
+    - ci-cd-bots
+  # Sync Windows for controlling when syncs can occur
+  syncWindows:
+  - kind: allow
+    schedule: '0 9 * * 1-5'  # Allow syncs Mon-Fri 9 AM
+    duration: 8h
+    applications:
+    - '*'
+    manualSync: true
+  - kind: deny
+    schedule: '0 0 * * 0'  # Deny syncs on Sundays
+    duration: 24h
+    applications:
+    - '*'
+    manualSync: false
+  - kind: allow
+    schedule: '0 18 * * 1-5'  # Allow syncs Mon-Fri 6 PM
+    duration: 2h
+    applications:
+    - 'production-*'
+    manualSync: true
 
