@@ -1,0 +1,22 @@
+# Expected: Sync fails (second policy matches this repo; mode provenance required, but Bitnami has no .prov).
+# Demonstrates Policy 2 applies to OCI Bitnami.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-non-overlapping-oci-demo
+  namespace: argocd-e2e
+spec:
+  project: helm-non-overlapping
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts/nginx
+    path: .
+    targetRevision: "18.0.0"
+    helm:
+      releaseName: helm-non-overlapping-oci
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-integrity-03
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

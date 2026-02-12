@@ -1,4 +1,4 @@
-# Two policies for different repos; app uses HTTPS Bitnami → only first policy matches → pass.
+# Two policies for different repos. App 1 (HTTPS) matches first → pass. App 2 (OCI) matches second → fails (no .prov).
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:

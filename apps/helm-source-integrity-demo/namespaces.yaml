@@ -1,0 +1,31 @@
+# Namespaces required by helm-source-integrity-demo apps.
+# Apply before apps: kubectl apply -f namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-01
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-02
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-03
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-04
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-05
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm-integrity-06

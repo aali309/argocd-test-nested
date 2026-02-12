@@ -11,6 +11,12 @@ echo "Ensure default project allows these repos (or add them):"
 echo "  - https://charts.bitnami.com/bitnami (Helm)"
 echo "  - oci://registry-1.docker.io/bitnamicharts/nginx (OCI)"
 echo ""
+echo "For 02, 03-oci, 04 to fail as expected: repo-server must have ARGOCD_GPG_ENABLED=true."
+echo "If GPG is disabled, all apps will pass (provenance verification is skipped)."
+echo ""
+
+echo "Creating namespaces..."
+kubectl apply -f "$(dirname "$0")/namespaces.yaml"
 
 if command -v argocd &>/dev/null; then
   echo "Adding Bitnami Helm repo (if not already present)..."
