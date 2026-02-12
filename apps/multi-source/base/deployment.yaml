@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-source-demo
+  namespace: multi-source-demo
+  labels:
+    app: multi-source-demo
+    source: base
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-source-demo
+  template:
+    metadata:
+      labels:
+        app: multi-source-demo
+        source: base
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: SOURCE
+              value: "base"

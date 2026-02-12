@@ -1,0 +1,23 @@
+# Policy: mode provenance → .prov required and must be signed by allowed key.
+# Bitnami charts do not ship .prov → sync will fail (provenance required).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-provenance-required
+  namespace: argocd-e2e
+spec:
+  description: "Helm source integrity - provenance required (chart has no .prov)"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity:
+    helm:
+      policies:
+        - repos:
+            - url: "https://charts.bitnami.com/*"
+          gpg:
+            mode: provenance
+            keys:
+              - "D56C4FCA57A46444"

@@ -1,0 +1,6 @@
+# Override values for the Bitnami nginx chart (Helm multisource demo).
+# This file is loaded via Helm valueFiles: [$values/values.yaml];
+# $values is the Git source with ref: values (this directory).
+replicaCount: 1
+nameOverride: "helm-multisource-demo"
+fullnameOverride: "helm-multisource-demo"

@@ -1,0 +1,31 @@
+# Multi-source Application: one Application, two sources combined at sync time.
+# Argo CD renders each source and merges the manifests, then syncs the result.
+#
+# Apply this Application to your cluster (or use it as a reference):
+#   kubectl apply -f apps/multi-source/application.yaml
+#
+# Ensure the repo URL and targetRevision match your branch (e.g. main, multiSource).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: multi-source-demo
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: multi-source-demo
+  # Two sources — Argo CD ignores spec.source when spec.sources is set
+  sources:
+    # Source 1: base app (namespace + deployment)
+    - repoURL: https://github.com/aali309/argocd-test-nested.git
+      targetRevision: HEAD
+      path: apps/multi-source/base
+    # Source 2: extra config (configmap) — merged with source 1 into one sync
+    - repoURL: https://github.com/aali309/argocd-test-nested.git
+      targetRevision: HEAD
+      path: apps/multi-source/extras
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

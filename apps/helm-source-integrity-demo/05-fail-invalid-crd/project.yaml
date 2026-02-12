@@ -1,0 +1,15 @@
+# Invalid: sourceIntegrity is empty (no git, no helm).
+# Expected: kubectl apply fails with validation error (e.g. at least one of git or helm must be set).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-invalid-crd
+  namespace: argocd-e2e
+spec:
+  description: "Invalid - sourceIntegrity has neither git nor helm"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity: {}

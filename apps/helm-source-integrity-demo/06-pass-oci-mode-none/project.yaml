@@ -1,0 +1,21 @@
+# OCI Helm: policy with mode none for Bitnami OCI registry. Sync should pass.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-oci-mode-none
+  namespace: argocd-e2e
+spec:
+  description: "OCI Helm source integrity - mode none (no verification)"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity:
+    helm:
+      policies:
+        - repos:
+            - url: "oci://registry-1.docker.io/bitnamicharts/*"
+          gpg:
+            mode: none
+            keys: []

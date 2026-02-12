@@ -1,0 +1,21 @@
+# Expected: Sync fails - "multiple Helm source integrity policies found for repo URL"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-overlapping-demo
+  namespace: argocd-e2e
+spec:
+  project: helm-overlapping
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: nginx
+    targetRevision: "18.0.0"
+    helm:
+      releaseName: helm-overlapping
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-integrity-04
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

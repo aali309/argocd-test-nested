@@ -1,0 +1,34 @@
+# Helm + Git values multisource demo
+# Source 1: Bitnami nginx Helm chart (external)
+# Source 2: This repo — value overrides only (ref: values)
+# Argo CD uses $values to point the chart at our Git-hosted values.
+#
+# Apply: kubectl apply -f apps/multi-source/helm-demo-application.yaml
+# Ensure repo URL and targetRevision match your branch.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-multisource-demo
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-multisource-demo
+  sources:
+    # Source 1: Helm chart (external OCI/registry)
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: nginx
+      targetRevision: "17"
+      helm:
+        valueFiles:
+          - $values/values.yaml
+    # Source 2: Git repo as values only — ref makes it available as $values
+    - repoURL: https://github.com/aali309/argocd-test-nested.git
+      targetRevision: HEAD
+      ref: values
+      path: apps/multi-source/helm-values
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

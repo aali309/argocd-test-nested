@@ -1,0 +1,20 @@
+# Expected: Sync passes (OCI Helm chart, policy mode none)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-oci-mode-none-demo
+  namespace: argocd-e2e
+spec:
+  project: helm-oci-mode-none
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts/nginx
+    targetRevision: "18.0.0"
+    helm:
+      releaseName: helm-oci-mode-none
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-integrity-06
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

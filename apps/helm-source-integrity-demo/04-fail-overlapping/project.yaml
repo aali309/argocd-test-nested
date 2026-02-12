@@ -1,0 +1,27 @@
+# Two policies both match the same repo URL → Argo CD error (multiple policies).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-overlapping
+  namespace: argocd-e2e
+spec:
+  description: "Overlapping policies - both globs match Bitnami repo"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity:
+    helm:
+      policies:
+        - repos:
+            - url: "*"
+          gpg:
+            mode: provenance
+            keys:
+              - "abc"
+        - repos:
+            - url: "https://charts.bitnami.com/*"
+          gpg:
+            mode: none
+            keys: []

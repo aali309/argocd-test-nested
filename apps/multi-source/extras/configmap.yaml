@@ -1,0 +1,12 @@
+# This resource comes from the second source (extras).
+# Argo CD merges it with base/ manifests — one Application, two sources.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: multi-source-demo-config
+  namespace: multi-source-demo
+  labels:
+    source: extras
+data:
+  greeting: "Hello from multisource!"
+  source: "extras"
