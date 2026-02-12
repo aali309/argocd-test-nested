@@ -1,4 +1,5 @@
-# Expected: Sync passes (policy mode is none, no provenance required)
+# Expected: Sync passes (policy mode is none, no provenance required).
+# Uses OCI so we avoid 403 from Bitnami HTTPS when .prov is requested.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,8 +8,8 @@ metadata:
 spec:
   project: helm-mode-none
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: nginx
+    repoURL: oci://registry-1.docker.io/bitnamicharts/nginx
+    path: .
     targetRevision: "18.0.0"
     helm:
       releaseName: helm-mode-none

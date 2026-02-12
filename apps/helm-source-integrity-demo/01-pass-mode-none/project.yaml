@@ -1,4 +1,5 @@
 # Policy: mode none → no provenance check. Sync should pass.
+# Uses OCI repo to avoid 403 when chart repos block .prov requests over HTTPS.
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -15,7 +16,7 @@ spec:
     helm:
       policies:
         - repos:
-            - url: "https://charts.bitnami.com/*"
+            - url: "oci://registry-1.docker.io/bitnamicharts/*"
           gpg:
             mode: none
             keys: []

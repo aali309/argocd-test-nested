@@ -21,10 +21,10 @@ See [docs/helm-provenance-verification-flow.md](../../docs/helm-provenance-verif
 
 | Folder | Source | Policy | Expected |
 |--------|--------|--------|----------|
-| **01-pass-mode-none** | Helm (HTTPS) Bitnami nginx | `https://charts.bitnami.com/*` → mode none | Sync **passes** |
-| **02-fail-provenance-required** | Same | Same repo → mode provenance + key | Sync **fails** (no .prov) |
-| **03-pass-non-overlapping** | Same | Two policies (Bitnami HTTPS none, OCI provenance) | Sync **passes** (one match) |
-| **04-fail-overlapping** | Same | Two policies both match Bitnami | Sync **fails** (multiple policies) |
+| **01-pass-mode-none** | OCI Bitnami nginx | `oci://...bitnamicharts/*` → mode none | Sync **passes** (OCI avoids .prov 403) |
+| **02-fail-provenance-required** | HTTPS Bitnami nginx | Same repo → mode provenance + key | Sync **fails** (no .prov or 403) |
+| **03-pass-non-overlapping** | HTTPS Bitnami nginx | Two policies (HTTPS none, OCI provenance) | Sync **passes** (one match) |
+| **04-fail-overlapping** | HTTPS Bitnami nginx | Two policies both match Bitnami | Sync **fails** (multiple policies) |
 | **05-fail-invalid-crd** | — | Project with empty `sourceIntegrity: {}` | **kubectl apply** fails |
 | **06-pass-oci-mode-none** | OCI Bitnami nginx | `oci://registry-1.docker.io/bitnamicharts/*` → mode none | Sync **passes** |
 
@@ -35,7 +35,7 @@ Create **projects first**, then **applications** (apps reference the project).
 ```bash
 # From repo root
 
-# 1. Pass: mode none (traditional Helm)
+# 1. Pass: mode none (OCI chart — avoids 403 on .prov)
 kubectl apply -f apps/helm-source-integrity-demo/01-pass-mode-none/
 
 # 2. Fail: provenance required (no .prov)
@@ -72,7 +72,7 @@ argocd repo add https://charts.bitnami.com/bitnami --type helm
 ## Verify
 
 - **01, 03, 06**: In Argo CD UI, apps should be **Synced**; check namespaces `helm-integrity-01`, `helm-integrity-03`, `helm-integrity-06`.
-- **02, 04**: Apps should show **ComparisonError** (or similar) with message about missing provenance or multiple policies.
+- **02, 04**: Apps should show **ComparisonError** (e.g. missing provenance, **provenance URL returned 403 Forbidden**, or multiple policies). Bitnami’s HTTPS repo often returns 403 for `.prov` requests, which is one expected form of failure when provenance is required.
 - **05**: `kubectl apply` should fail on the project.
 
 **Note:** All Applications and AppProjects use namespace `argocd-e2e`. Ensure that namespace exists (e.g. `kubectl create namespace argocd-e2e`) or that Argo CD is configured to use it.

@@ -8,6 +8,7 @@ spec:
   project: helm-oci-mode-none
   source:
     repoURL: oci://registry-1.docker.io/bitnamicharts/nginx
+    path: .
     targetRevision: "18.0.0"
     helm:
       releaseName: helm-oci-mode-none
