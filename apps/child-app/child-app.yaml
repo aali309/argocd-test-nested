@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: child-app
   namespace: namespace-b
+  annotations:
+    argocd.argoproj.io/managed-by-url: "http://localhost:8081" # Replace with actual secondary ArgoCD URL in real setup
 spec:
   project: default
   source:
