@@ -18,3 +18,24 @@ spec:
     automated:
       selfHeal: true
       prune: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: child-app-2
+  namespace: namespace-a
+  annotations:
+    argocd.argoproj.io/managed-by-url: "ftp://localhost:8081" # Replace with actual secondary ArgoCD URL in real setup
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/child-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: namespace-a
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

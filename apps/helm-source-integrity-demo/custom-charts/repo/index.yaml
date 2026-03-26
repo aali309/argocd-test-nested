@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  demo-chart:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-02-16T21:19:06.207744-05:00"
+    description: Custom chart for Helm source integrity testing (sign with GPG)
+    digest: 6c88424e2827977bd483b0059724b287644438da76ddec537eb7a18d6af3c2fc
+    name: demo-chart
+    type: application
+    urls:
+    - demo-chart-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-02-16T21:19:06.207603-05:00"

@@ -1,0 +1,26 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+apiVersion: v2
+appVersion: 1.0.0
+description: Custom chart for Helm source integrity testing (sign with GPG)
+name: demo-chart
+type: application
+version: 1.0.0
+
+...
+files:
+  demo-chart-1.0.0.tgz: sha256:6c88424e2827977bd483b0059724b287644438da76ddec537eb7a18d6af3c2fc
+-----BEGIN PGP SIGNATURE-----
+
+wsDcBAEBCgAQBQJpk9AaCRDFaXM9PQUoXQAAyecMADbR3XTNs6JBckeTQCat9Fsz
+cAgBiqRs74i5M6skI5Tpx/BJs5/LqrtjaMMXWS9NeLg8XvqqZ77prTULZ1ToxvnY
+5TBzIN+WnJSQ1EqMsNgzjV0Jv5sBD6muERBW3dQQy/rNMcOOUJ9pzFzl6v5U91xz
+TyQCGkqlUGYlPOj5BZkDNylqGYc5NraarGD96yD89RIx4qoNYa7b1pwYtFTTVxQa
+RSbiTSpY/4Tv0iRM4ESeqJQUI8ssrxoeNCSgb6xBMLdk3nBcud2DChQW/Y94BJd2
+CEJ724CCITs9IBSrDE6vGGz7f6r5M0mTvGm5F3+ObQrZTrPodQFylA4TMW4T84yQ
+4BioEmOOkBeqYBpNFqY7nXci1hdjzqDly4VHIr54otnA87eHGGD1inV2GleIeFsB
+E73fbLYON8D0RTTP+wvEoHysnXJxSHjn4HejJ1Ol7kip1idmxYs75EqkEVsrPZRa
+O+gKjGVCXOsYkBMu2sHnO8j0YuKnxKsmXP7vZQcTHQ==
+=uTAe
+-----END PGP SIGNATURE-----

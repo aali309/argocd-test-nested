@@ -5,3 +5,11 @@ metadata:
   labels:
     app.kubernetes.io/name: namespace-b
     app.kubernetes.io/managed-by: argocd
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: namespace-a
+  labels:
+    app.kubernetes.io/name: namespace-a
+    app.kubernetes.io/managed-by: argocd
