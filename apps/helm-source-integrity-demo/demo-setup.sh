@@ -18,6 +18,12 @@ echo ""
 echo "Creating namespaces..."
 kubectl apply -f "$(dirname "$0")/namespaces.yaml"
 
+echo "Creating RBAC for Argo CD application controller (argocd-e2e) in helm-integrity-* namespaces..."
+kubectl apply -f "$(dirname "$0")/rbac.yaml"
+
+echo "Creating cluster-scoped RBAC for Argo CD application controller (cache sync)..."
+kubectl apply -f "$(dirname "$0")/cluster-rbac.yaml"
+
 if command -v argocd &>/dev/null; then
   echo "Adding Bitnami Helm repo (if not already present)..."
   argocd repo add https://charts.bitnami.com/bitnami --type helm 2>/dev/null || true

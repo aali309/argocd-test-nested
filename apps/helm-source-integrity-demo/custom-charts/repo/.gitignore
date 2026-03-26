@@ -1,0 +1,4 @@
+# Built artifacts; generate with scripts/package-and-sign.sh
+# Remove this line to commit charts for GitHub Pages
+*
+!.gitignore

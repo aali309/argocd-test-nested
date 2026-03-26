@@ -18,6 +18,19 @@ See [docs/helm-provenance-verification-flow.md](../../docs/helm-provenance-verif
 - Default project allows `https://charts.bitnami.com/bitnami` and OCI; or add repos (see below).
 - **`ARGOCD_GPG_ENABLED=true`** on the repo-server. If `false` or unset in some setups, provenance verification is skipped and apps that should fail (02, 03-oci, 04) will pass instead.
 
+## One-time setup
+
+Run `./demo-setup.sh` from this directory, or apply manually:
+
+```bash
+kubectl apply -f namespaces.yaml
+kubectl apply -f rbac.yaml
+kubectl apply -f cluster-rbac.yaml
+```
+
+- `rbac.yaml` – grants the controller permission to manage resources in `helm-integrity-*` namespaces (namespace-scoped).
+- `cluster-rbac.yaml` – grants the controller cluster-scoped list/get (for cluster cache sync). Required when Argo CD is in `argocd-e2e` without a ClusterRoleBinding.
+
 ## Scenarios
 
 | Folder | Source | Policy | Expected |
@@ -28,6 +41,8 @@ See [docs/helm-provenance-verification-flow.md](../../docs/helm-provenance-verif
 | **04-fail-overlapping** | HTTPS Bitnami nginx | Two policies both match Bitnami | Sync **fails** (multiple policies) |
 | **05-fail-invalid-crd** | — | Project with empty `sourceIntegrity: {}` | **kubectl apply** fails |
 | **06-pass-oci-mode-none** | OCI Bitnami nginx | `oci://registry-1.docker.io/bitnamicharts/*` → mode none | Sync **passes** |
+| **07-pass-custom-signed-helm** | Your own Helm chart (signed) | Custom repo URL → mode provenance + your key | Sync **passes** (see [custom-charts/](custom-charts/)) |
+| **08-pass-custom-signed-oci** | Your own OCI chart (signed) | Custom OCI registry → mode provenance + your key | Sync **passes** (see [custom-charts/](custom-charts/)) |
 
 ## Apply order
 
@@ -54,6 +69,11 @@ kubectl apply -f apps/helm-source-integrity-demo/05-fail-invalid-crd/
 
 # 6. Pass: OCI Helm with mode none
 kubectl apply -f apps/helm-source-integrity-demo/06-pass-oci-mode-none/
+
+# 7–8. Custom signed charts (your own chart + GPG): see custom-charts/README.md
+#      After running custom-charts/scripts (gen-gpg-key, package-and-sign, serve or push OCI):
+# kubectl apply -f apps/helm-source-integrity-demo/07-pass-custom-signed-helm/
+# kubectl apply -f apps/helm-source-integrity-demo/08-pass-custom-signed-oci/
 ```
 
 ## Optional: add repos to default project

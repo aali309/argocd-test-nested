@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-demo
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: demo-chart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-chart
+  template:
+    metadata:
+      labels:
+        app: demo-chart
+    spec:
+      containers:
+        - name: demo
+          image: nginx:1.25-alpine
+          ports:
+            - containerPort: 80

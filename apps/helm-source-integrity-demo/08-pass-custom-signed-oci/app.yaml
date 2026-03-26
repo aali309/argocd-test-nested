@@ -1,0 +1,25 @@
+# Expected: Sync passes when chart + provenance are in the OCI registry and key is in policy + Argo CD.
+# 1. Run gen-gpg-key.sh and package-and-sign.sh
+# 2. Push to OCI: REGISTRY=oci://localhost:5000/charts ./scripts/push-oci.sh (or your registry)
+# 3. Replace repoURL below with your OCI base (e.g. oci://localhost:5000/charts/demo-chart)
+# 4. In project.yaml set keys and repos URL to match your registry
+# 5. argocd gpg add --from custom-charts/keys/demo-helm-signing.asc
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-custom-signed-oci-demo
+  namespace: argocd-e2e
+spec:
+  project: helm-custom-signed-oci
+  source:
+    repoURL: oci://localhost:5000/charts/demo-chart
+    targetRevision: "1.0.0"
+    helm:
+      releaseName: helm-custom-signed-oci
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-integrity-08
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,27 @@
+# Charts are NOT signed until you run custom-charts/scripts (gen-gpg-key.sh then package-and-sign.sh).
+# Expected: Sync passes when repo is served with index + .tgz + .prov and Argo CD has the public key.
+# 1. Run custom-charts/scripts/gen-gpg-key.sh and package-and-sign.sh
+# 2. Serve custom-charts/repo/ (e.g. python -m http.server 8080 -d repo)
+# 3. Replace REPO_BASE_URL below with e.g. http://localhost:8080 (or your GitHub Pages URL)
+# 4. In project.yaml set keys to the key ID from gen-gpg-key.sh
+# 5. argocd gpg add --from custom-charts/keys/demo-helm-signing.asc
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-custom-signed-demo
+  namespace: argocd-e2e
+spec:
+  project: helm-custom-signed
+  source:
+    repoURL: http://localhost:8080
+    chart: demo-chart
+    targetRevision: "1.0.0"
+    helm:
+      releaseName: helm-custom-signed
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-integrity-07
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

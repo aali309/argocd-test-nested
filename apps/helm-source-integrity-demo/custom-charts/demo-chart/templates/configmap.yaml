@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-demo
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: demo-chart
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+data:
+  message: "Signed custom chart - source integrity demo"

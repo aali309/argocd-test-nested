@@ -12,6 +12,9 @@ spec:
     targetRevision: "18.0.0"
     helm:
       releaseName: helm-oci-mode-none
+      values: |
+        image:
+          tag: latest
   destination:
     server: https://kubernetes.default.svc
     namespace: helm-integrity-06

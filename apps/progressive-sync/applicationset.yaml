@@ -26,17 +26,17 @@ spec:
         - key: environment
           operator: In
           values:
-          - dev
+          - devs
       - matchExpressions:
         - key: environment
           operator: In
           values:
-          - staging
+          - stagings
       - matchExpressions:
         - key: environment
           operator: In
           values:
-          - prod
+          - prods
   template:
     metadata:
       name: '{{.name}}-{{.environment}}'

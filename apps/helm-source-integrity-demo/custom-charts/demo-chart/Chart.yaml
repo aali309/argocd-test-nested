@@ -1,0 +1,6 @@
+apiVersion: v2
+name: demo-chart
+description: Custom chart for Helm source integrity testing (sign with GPG)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

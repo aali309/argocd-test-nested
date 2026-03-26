@@ -1,0 +1,5 @@
+# Do not commit secret keys
+*.secret.gpg
+*.secret.asc
+# Public key can be committed so Argo CD can load it
+# !demo-helm-signing.asc

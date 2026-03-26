@@ -1,0 +1,25 @@
+# Custom OCI Helm: require provenance signed by our key.
+# Replace KEY_ID with the key ID from gen-gpg-key.sh.
+# Replace OCI registry in app.yaml (e.g. oci://ghcr.io/myuser/charts or oci://localhost:5000/charts).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-custom-signed-oci
+  namespace: argocd-e2e
+spec:
+  description: "Custom OCI Helm chart - provenance required"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity:
+    helm:
+      policies:
+        - repos:
+            # For local registry: oci://localhost:5000/* ; for ghcr.io: oci://ghcr.io/YOUR_USER/*
+            - url: "oci://localhost:5000/charts/*"
+          gpg:
+            mode: provenance
+            keys:
+              - "C569733D3D05285D"

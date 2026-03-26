@@ -17,8 +17,9 @@ spec:
         - repos:
             - url: "https://charts.bitnami.com/*"
           gpg:
-            mode: none
-            keys: []
+            mode: provenance
+            keys:
+              - "D56C4FCA57A46444"
         - repos:
             - url: "oci://registry-1.docker.io/bitnamicharts/*"
           gpg:

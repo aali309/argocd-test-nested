@@ -1,0 +1,25 @@
+# Custom Helm repo: require provenance signed by our key. Charts are signed only after you run custom-charts/scripts.
+# Replace REPLACE_WITH_KEY_ID with the key ID printed by custom-charts/scripts/gen-gpg-key.sh.
+# Replace repo URL in app.yaml with your served repo (e.g. http://localhost:8080 or GitHub Pages).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: helm-custom-signed
+  namespace: argocd-e2e
+spec:
+  description: "Custom signed Helm chart - provenance required"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "*"
+  sourceIntegrity:
+    helm:
+      policies:
+        - repos:
+            # Match local server; for GitHub Pages use e.g. url: "https://YOUR_USER.github.io/*"
+            - url: "http://localhost:*/*"
+          gpg:
+            mode: provenance
+            keys:
+              - "REPLACE_WITH_KEY_ID"
