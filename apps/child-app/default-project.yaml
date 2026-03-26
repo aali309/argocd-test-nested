@@ -23,3 +23,15 @@ spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: namespace-a
+  labels:
+    app.kubernetes.io/name: default-project
+    app.kubernetes.io/part-of: secondary-argocd
+spec:
+  description: Default project for secondary ArgoCD instance
+  # Allow manifests to deploy from any Git repos
