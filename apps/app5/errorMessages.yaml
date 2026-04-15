@@ -4,7 +4,7 @@ metadata:
   name: postgresql-app5
   namespace: argocd-e2e
   annotations:
-    repro-poll: "2026-04-14T12:00:00Z"
+    repro-poll: "2026-04-15T18:00:00Z"
 spec:
   serviceName: postgresql-svc
   replicas: 1
