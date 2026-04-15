@@ -11,7 +11,7 @@ spec:
     path: apps/app5
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: argocd-e2e
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true
