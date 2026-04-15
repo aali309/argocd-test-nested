@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: app5
   namespace: argocd-e2e
+  annotations:
+    # Per-app compare cadence (~2m). Global alternative: argocd-cm data.timeout.reconciliation (seconds).
+    argocd.argoproj.io/refresh: "120"
 spec:
   project: default
   source:
@@ -12,9 +15,7 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: argocd-e2e
+  # Repro (#27344 / #25290): no automated sync — OutOfSync visible once compare sees new Git SHA.
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     syncOptions:
     - CreateNamespace=true
