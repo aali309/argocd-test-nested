@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-2
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/name: app-2
+    app.kubernetes.io/part-of: image-updater-console-test
+  annotations:
+    argocd.argoproj.io/description: "Target app for Argo CD Image Updater console testing (namePattern app-2)"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aali309/argocd-test-nested.git
+    targetRevision: main
+    path: apps/image-updater-test/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: image-updater-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

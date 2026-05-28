@@ -1,0 +1,27 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: image-updater-test-admin
+  namespace: image-updater-test
+rules:
+- apiGroups: [ "" ]
+  resources: [ "pods", "services", "configmaps", "secrets", "events" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+- apiGroups: [ "apps" ]
+  resources: [ "deployments", "replicasets" ]
+  verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: image-updater-test-admin-binding
+  namespace: image-updater-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: image-updater-test-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops

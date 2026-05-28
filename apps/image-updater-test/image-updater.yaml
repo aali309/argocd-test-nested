@@ -1,0 +1,21 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: image-updater-test
+  namespace: openshift-gitops
+  labels:
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: image-updater
+    app.kubernetes.io/part-of: image-updater-console-test
+spec:
+  applicationRefs:
+  - namePattern: app-2
+    useAnnotations: false
+    commonUpdateSettings:
+      forceUpdate: false
+      updateStrategy: semver
+    images:
+    - alias: test-nginx
+      imageName: nginx:1.17.10
+    - alias: test-memcached
+      imageName: memcached:1.6.10
