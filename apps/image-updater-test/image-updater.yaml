@@ -16,6 +16,6 @@ spec:
       updateStrategy: semver
     images:
     - alias: test-nginx
-      imageName: nginx:1.17.10
+      imageName: nginxinc/nginx-unprivileged:1.17.10
     - alias: test-memcached
       imageName: memcached:1.6.10

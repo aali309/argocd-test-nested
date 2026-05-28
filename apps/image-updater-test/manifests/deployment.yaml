@@ -16,22 +16,35 @@ spec:
       labels:
         app.kubernetes.io/name: app-2
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: nginx
-        image: nginx:1.17.0
+        # Official nginx runs as root on port 80; fails on OpenShift restricted-v2 SCC.
+        image: nginxinc/nginx-unprivileged:1.17.0
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
         resources:
           requests:
             cpu: 10m
             memory: 32Mi
           limits:
             cpu: 100m
-            memory: 64Mi
+            memory: 128Mi
       - name: memcached
         image: memcached:1.6.0
         ports:
         - containerPort: 11211
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
         resources:
           requests:
             cpu: 10m

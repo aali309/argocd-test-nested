@@ -8,9 +8,9 @@ Manifests to exercise the **Image Updaters** UI from [gitops-console-plugin PR #
 |----------|------|-----------|---------|
 | `Application` | `app-2` | `openshift-gitops` | Matches `namePattern: app-2` on the ImageUpdater |
 | `ImageUpdater` | `image-updater-test` | `openshift-gitops` | semver updates for nginx and memcached |
-| `Deployment` | `app-2` | `image-updater-test` | Starts at `nginx:1.17.0` and `memcached:1.6.0` |
+| `Deployment` | `app-2` | `image-updater-test` | `nginxinc/nginx-unprivileged:1.17.0` + `memcached:1.6.0` |
 
-The ImageUpdater targets `nginx:1.17.10` and `memcached:1.6.10`. After reconciliation you should see `status` similar to:
+The ImageUpdater targets `nginxinc/nginx-unprivileged:1.17.10` and `memcached:1.6.10`. After reconciliation you should see `status` similar to:
 
 - `applicationsMatched: 1`
 - `imagesManaged: 2`
@@ -70,6 +70,21 @@ kubectl delete -f apps/image-updater-test/application.yaml
 kubectl delete -f apps/image-updater-test/manifests/rbac.yaml
 kubectl delete -f apps/image-updater-test/manifests/namespace.yaml
 ```
+
+## OpenShift note
+
+Official `nginx` images run as root on port 80 and **CrashLoop** under the `restricted-v2` SCC. This test uses `nginxinc/nginx-unprivileged` on port **8080** instead. The ImageUpdater `imageName` must match that image repository.
+
+## Troubleshooting
+
+**Application `ComparisonError` (path does not exist):** push `apps/image-updater-test/` to Git, then:
+
+```bash
+kubectl annotate application app-2 -n openshift-gitops argocd.argoproj.io/refresh=hard --overwrite
+kubectl patch application app-2 -n openshift-gitops --type merge -p '{"operation":{"initiatedBy":{"username":"kubectl"},"sync":{"revision":"main"}}}'
+```
+
+**ImageUpdater list shows `-`:** wait until `app-2` is `Synced` and pods are ready; then check `kubectl get imageupdater image-updater-test -n openshift-gitops -o yaml` for `status`.
 
 ## Customize
 
