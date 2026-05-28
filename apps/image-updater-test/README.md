@@ -85,7 +85,18 @@ kubectl annotate application app-2 -n openshift-gitops argocd.argoproj.io/refres
 kubectl patch application app-2 -n openshift-gitops --type merge -p '{"operation":{"initiatedBy":{"username":"kubectl"},"sync":{"revision":"main"}}}'
 ```
 
-**ImageUpdater list shows `-`:** confirm `app-2` is Kustomize (`kubectl get application app-2 -n openshift-gitops -o jsonpath='{.status.sourceType}{"\n"}'`), pods are ready, then check status. Controller logs (label selector may not match):
+**ImageUpdater skips app (`Directory` in controller logs):** the Application CR must include `kustomize: {}` under `spec.source`. Re-apply it (it is not synced from Git):
+
+```bash
+kubectl apply -f apps/image-updater-test/application.yaml
+kubectl annotate application app-2 -n openshift-gitops argocd.argoproj.io/refresh=hard --overwrite
+kubectl patch application app-2 -n openshift-gitops --type merge -p '{"operation":{"initiatedBy":{"username":"kubectl"},"sync":{"revision":"main"}}}'
+kubectl get application app-2 -n openshift-gitops -o jsonpath='{.status.sourceTypes}{"\n"}'
+```
+
+Expect `Kustomize`, not `Directory`.
+
+**ImageUpdater list shows `-`:** confirm `app-2` is Kustomize, pods are ready, then check status. Controller logs:
 
 ```bash
 kubectl logs -n openshift-gitops deploy/openshift-gitops-argocd-image-updater-controller --tail=100

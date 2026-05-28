@@ -4,3 +4,8 @@ resources:
 - namespace.yaml
 - rbac.yaml
 - deployment.yaml
+images:
+- name: nginxinc/nginx-unprivileged
+  newTag: "1.17.0"
+- name: memcached
+  newTag: "1.6.0"
