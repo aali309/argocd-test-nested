@@ -22,6 +22,7 @@ The ImageUpdater targets `nginxinc/nginx-unprivileged:1.17.10` and `memcached:1.
 - OpenShift GitOps (or Argo CD) with the **Image Updater** operator/CRD installed
 - Image Updater **v1.2.0+** (`status` subresource)
 - This repository pushed to a branch Argo CD can read (default: `main` on `aali309/argocd-test-nested`)
+- Application must be **Kustomize** (or Helm): `manifests/kustomization.yaml` is required — plain directories are ignored by Image Updater
 
 ## Deploy
 
@@ -84,7 +85,11 @@ kubectl annotate application app-2 -n openshift-gitops argocd.argoproj.io/refres
 kubectl patch application app-2 -n openshift-gitops --type merge -p '{"operation":{"initiatedBy":{"username":"kubectl"},"sync":{"revision":"main"}}}'
 ```
 
-**ImageUpdater list shows `-`:** wait until `app-2` is `Synced` and pods are ready; then check `kubectl get imageupdater image-updater-test -n openshift-gitops -o yaml` for `status`.
+**ImageUpdater list shows `-`:** confirm `app-2` is Kustomize (`kubectl get application app-2 -n openshift-gitops -o jsonpath='{.status.sourceType}{"\n"}'`), pods are ready, then check status. Controller logs (label selector may not match):
+
+```bash
+kubectl logs -n openshift-gitops deploy/openshift-gitops-argocd-image-updater-controller --tail=100
+```
 
 ## Customize
 
@@ -98,6 +103,7 @@ apps/image-updater-test/
 ├── image-updater.yaml    # ImageUpdater CR (apply manually)
 ├── apply-test.sh
 ├── manifests/            # Synced by Application app-2
+│   ├── kustomization.yaml
 │   ├── namespace.yaml
 │   ├── deployment.yaml
 │   └── rbac.yaml
