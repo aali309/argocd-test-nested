@@ -20,4 +20,27 @@ spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
+  roles:
+  - name: admin
+    description: "Full access to all applications in this project"
+    policies:
+    - p, proj:custom-project-no-description:admin, applications, *, custom-project-no-description/*, allow
+    - p, proj:custom-project-no-description:admin, repositories, get, *, allow
+    - p, proj:custom-project-no-description:admin, logs, get, custom-project-no-description/*, allow
+    groups:
+    - platform-admins
+  - name: developer
+    description: "Sync and view applications in this project"
+    policies:
+    - p, proj:custom-project-no-description:developer, applications, get, custom-project-no-description/*, allow
+    - p, proj:custom-project-no-description:developer, applications, sync, custom-project-no-description/*, allow
+    - p, proj:custom-project-no-description:developer, logs, get, custom-project-no-description/*, allow
+    groups:
+    - developers
+  - name: viewer
+    description: "Read-only access to applications"
+    policies:
+    - p, proj:custom-project-no-description:viewer, applications, get, custom-project-no-description/*, allow
+    groups:
+    - viewers
 

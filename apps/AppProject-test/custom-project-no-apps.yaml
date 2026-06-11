@@ -20,4 +20,12 @@ spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
+  roles:
+  - name: ci-cd
+    description: "Automated sync for future applications in this project"
+    policies:
+    - p, proj:custom-project-no-apps:ci-cd, applications, sync, custom-project-no-apps/*, allow
+    - p, proj:custom-project-no-apps:ci-cd, applications, get, custom-project-no-apps/*, allow
+    groups:
+    - ci-cd-bots
 

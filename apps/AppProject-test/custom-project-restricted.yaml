@@ -24,4 +24,18 @@ spec:
   - group: ''
     kind: 'Service'
   clusterResourceWhitelist: []
+  roles:
+  - name: maintainer
+    description: "Manage applications in the restricted namespace only"
+    policies:
+    - p, proj:custom-project-restricted:maintainer, applications, *, custom-project-restricted/*, allow
+    - p, proj:custom-project-restricted:maintainer, logs, get, custom-project-restricted/*, allow
+    groups:
+    - appproject-maintainers
+  - name: readonly
+    description: "View applications without sync permission"
+    policies:
+    - p, proj:custom-project-restricted:readonly, applications, get, custom-project-restricted/*, allow
+    groups:
+    - appproject-viewers
 

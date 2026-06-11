@@ -23,4 +23,13 @@ spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
+  roles:
+  - name: developer
+    description: "Developers can sync and inspect multi-repo applications"
+    policies:
+    - p, proj:custom-project-multiple-repos:developer, applications, get, custom-project-multiple-repos/*, allow
+    - p, proj:custom-project-multiple-repos:developer, applications, sync, custom-project-multiple-repos/*, allow
+    - p, proj:custom-project-multiple-repos:developer, repositories, get, *, allow
+    groups:
+    - developers
 
