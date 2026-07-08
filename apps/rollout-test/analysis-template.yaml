@@ -4,9 +4,12 @@ metadata:
   name: success-rate
   namespace: rollout-test
 spec:
+  args:
+  - name: service-name
   metrics:
   - name: success-rate
     interval: 30s
+    count: 3
     successCondition: result[0] >= 0.95
     failureLimit: 3
     provider:
