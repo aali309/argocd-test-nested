@@ -5,44 +5,57 @@ metadata:
   namespace: openshift-gitops
 spec:
   goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
+  goTemplateOptions: ["missingkey=error"]
   generators:
   - list:
       elements:
+      # Stage 1 — deploy first
       - name: app1
         environment: dev
+        stage: "1"
         url: https://kubernetes.default.svc
+      # Stage 2 — waits until stage 1 is Healthy
       - name: app2
         environment: staging
+        stage: "2"
         url: https://kubernetes.default.svc
+      # Stage 3 — waits until stage 2 is Healthy
       - name: app3
         environment: prod
+        stage: "3"
         url: https://kubernetes.default.svc
   strategy:
     type: RollingSync
     rollingSync:
       steps:
+      # Stage 1
       - matchExpressions:
-        - key: environment
+        - key: stage
           operator: In
           values:
-          - dev
+          - "1"
+        maxUpdate: 100%
+      # Stage 2
       - matchExpressions:
-        - key: environment
+        - key: stage
           operator: In
           values:
-          - staging
+          - "2"
+        maxUpdate: 100%
+      # Stage 3
       - matchExpressions:
-        - key: environment
+        - key: stage
           operator: In
           values:
-          - prod
+          - "3"
+        maxUpdate: 100%
   template:
     metadata:
       name: '{{.name}}-{{.environment}}'
       namespace: openshift-gitops
       labels:
         environment: '{{.environment}}'
+        stage: '{{.stage}}'
     spec:
       project: default
       source:
@@ -52,3 +65,6 @@ spec:
       destination:
         server: '{{.url}}'
         namespace: '{{.name}}'
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
