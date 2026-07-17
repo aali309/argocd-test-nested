@@ -7,7 +7,7 @@ metadata:
     repro-poll: "2026-05-04T18:00:00Z"
 spec:
   serviceName: postgresql-svc
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: postgresql
